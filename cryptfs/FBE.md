@@ -1,10 +1,25 @@
 FBE
 ========================================
 
-LOGS
+* 英文: FBE, File-Based Encryption
+* Android官方文档: https://source.android.com/security/encryption/file-based.html
+* 支持版本: Android 7.0支持
+* 主要作用: Android 7.0及更高版本支持基于文件的加密（FBE）。基于文件的加密允许不同文件被不同keys加密并且解锁也是独立的.
+
+```
+Different from encrypting full disk, file based encryption can encrypt each file via different keys. The most noticeable usage is that different user profile now using different keys.
+Previously, different users share the same disk encryption key. OK, user/developer visible change is that we will have a so-called direct boot feature.
+Previously after rebooting, a user has to unlock the entire disk (same password as the primary user), on a black screen with password input, and then unlock his own profile (mostly primary user).
+Now, you can reboot directly to user profile unlock. No black screen unlocking any more. For developer, you can run your app in user0 space which doesn't require user's profile unlocked.
+That means your app can run before user input their password and swipe to unlock.
+```
+
+Analysis
 ----------------------------------------
 
-#### 1.vold
+### 1.vold
+
+#### LOG
 
 ```
 01-15 06:48:24.514   592   598 E keymaster1_device: HwKmClose
@@ -44,7 +59,23 @@ LOGS
 01-15 06:48:24.589   592   598 I vold    : Policy for /data/user_de/0 set to 5b317534021c2524
 ```
 
-#### 2.zygote
+#### SOURCES
+
+path: system/vold/Ext4Crypt.cpp
+
+```
+e4crypt_init_user0()
+ |
+ +-> create_and_install_user_keys
+ |
+ +-> load_all_de_keys
+ |
+ +-> e4crypt_prepare_user_storage
+ |
+ +- non-FBE -> e4crypt_unlock_user_key(0, 0, "!", "!")
+```
+
+### 2.zygote
 
 ```
 01-15 06:48:41.036   737   737 I Zygote  : ...preloaded 86 resources in 68ms.
@@ -72,18 +103,19 @@ LOGS
 01-15 06:48:45.189   746   746 I         : closing connection
 ```
 
-#### 3.system_server
+### 3.system_server
 
 ```
 01-15 06:48:45.196  1639  1639 I SystemServer: Entered the Android system server!
-...
+```
+
+### 4.PackageManager
+
+#### LOG
+
+```
 01-15 06:48:45.367  1639  1639 I SystemServer: StartPackageManagerService
 ...
-```
-
-#### 4.PackageManager
-
-```
 01-15 06:48:58.541  1639  2808 I PackageManager: /system/framework/framework-ext-res changed; collecting certs
 01-15 06:48:58.551  1639  2808 I chatty  : uid=1000(system) packagescan-1 expire 6 lines
 01-15 06:48:58.553  1639  2808 W PackageManager: Permission android.permission.LOCATION_POLICY_INTERNAL from package com.miui.rom in an unknown group android.permission-group.LOCATION
@@ -93,11 +125,6 @@ LOGS
 01-15 06:49:05.285  1639  2812 I PackageManager: /data/app/partner-BaiduMap changed; collecting certs
 01-15 06:49:05.800  1639  2811 I PackageManager: /data/app/recommended-3rd-cn.wps.moffice_eng changed; collecting certs
 ...
-```
-
-##### A.reconcileAppsData
-
-```
 01-15 06:49:08.026  1639  1639 V PackageManager: reconcileAppsData for null u0 0x1
 
 01-15 06:49:08.027   746   746 I SELinux : SELinux: Loaded file_contexts contexts from /file_contexts.bin.
@@ -105,26 +132,55 @@ LOGS
 ...
 01-15 06:49:08.213   746   746 D installd: Detected label change from u:object_r:system_data_file:s0 to u:object_r:radio_data_file:s0 at /data/user_de/0/com.qti.editnumber; running recursive restorecon
 01-15 06:49:08.214  1639  1639 V PackageManager: reconcileAppsData finished 214 packages
-01-15 06:49:08.388  2816  2816 I dex2oat : /system/bin/dex2oat --compiler-filter=speed
+
 ...
 
+01-15 06:49:08.388  2816  2816 I dex2oat : /system/bin/dex2oat --compiler-filter=speed
 01-15 06:50:36.703  4878  4878 I dex2oat : dex2oat took 36.659ms (threads: 8) arena alloc=9KB (9760B) java alloc=115KB (118304B) native alloc=1087KB (1113648B) free=2MB (2556368B)
 01-15 06:50:36.706  1639  1639 W PackageManager: No disk maintenance in 1205436706; running immediately
 01-15 06:50:36.706  1639  1639 I SystemServer: StartLockSettingsService
 01-15 06:50:36.706  1639  3247 I MountService: Running fstrim idle maintenance
 01-15 06:50:36.706  1639  1639 I SystemServiceManager: Starting com.android.server.LockSettingsService$Lifecycle
-```
-
-#### 5.vold
-
-```
 01-15 06:50:36.706  1639  3247 D VoldConnector: SND -> {3 fstrim dotrim}
 01-15 06:50:36.707  1639  3248 D VoldConnector: RCV <- {200 3 Command succeeded}
 01-15 06:50:36.707   592  4887 D vold    : Starting trim of /data
+
+```
+
+#### SOURCES
+
+```
+PackageManagerService
+ |
+ +-> reconcileAppsDataLI
+```
+
+### 5.vold
+
+#### LOG
+
+```
+01-15 06:50:41.581  1639  1755 I ActivityManager: Start proc 5566:com.android.defcontainer/u0a9 for on-hold
+01-15 06:50:41.582  1639  1755 D ActivityManager: Finishing user boot 0
 ...
 01-15 06:50:41.585  1639  1755 D CryptdConnector: SND -> {2 cryptfs unlock_user_key 0 0 [scrubbed] [scrubbed]}
 01-15 06:50:41.586   592   598 D vold    : e4crypt_unlock_user_key 0 serial=0 token_present=0
 01-15 06:50:41.586   592   598 W vold    : Tried to unlock already-unlocked key for user 0
+```
+
+#### SOURCES
+
+```
+finishUserBoot
+ |
+ +-> maybeUnlockUser
+     |
+     +-> unlockUserCleared
+```
+
+#### LOG
+
+```
 01-15 06:50:41.586  1639  3249 D CryptdConnector: RCV <- {200 2 Command succeeded}
 01-15 06:50:41.587  1639  1755 D CryptdConnector: SND -> {3 cryptfs prepare_user_storage ! 0 0 2}
 01-15 06:50:41.587   592   598 D vold    : e4crypt_prepare_user_storage for volume null, user 0, serial 0, flags 2
@@ -143,7 +199,7 @@ LOGS
 01-15 06:50:41.637  1639  3249 D CryptdConnector: RCV <- {200 5 Command succeeded}
 ```
 
-#### 6.UserManagerService
+### 6.UserManagerService
 
 ```
 01-15 06:50:41.638  1639  1755 V UserManagerService: Found /data/user/0 with serial number -1
@@ -152,7 +208,7 @@ LOGS
 01-15 06:50:41.638  1639  1755 D UserManagerService: Serial number missing on /data/system_ce/0; assuming current is valid
 ```
 
-#### 7.PackageManager
+### 7.PackageManager
 
 ```
 01-15 06:50:41.639  1639  1755 V PackageManager: reconcileAppsData for null u0 0x2
