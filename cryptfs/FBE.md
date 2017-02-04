@@ -4,14 +4,23 @@ FBE
 * 英文: FBE, File-Based Encryption
 * Android官方文档: https://source.android.com/security/encryption/file-based.html
 * 支持版本: Android 7.0支持
-* 主要作用: Android 7.0及更高版本支持基于文件的加密（FBE）。基于文件的加密允许不同文件被不同keys加密并且解锁也是独立的.
+* 主要作用: Android 7.0及更高版本支持基于文件的加密(FBE). 基于文件的加密允许不同文件被不同keys加密并且解锁也是独立的.
 
 ```
-Different from encrypting full disk, file based encryption can encrypt each file via different keys. The most noticeable usage is that different user profile now using different keys.
-Previously, different users share the same disk encryption key. OK, user/developer visible change is that we will have a so-called direct boot feature.
-Previously after rebooting, a user has to unlock the entire disk (same password as the primary user), on a black screen with password input, and then unlock his own profile (mostly primary user).
-Now, you can reboot directly to user profile unlock. No black screen unlocking any more. For developer, you can run your app in user0 space which doesn't require user's profile unlocked.
-That means your app can run before user input their password and swipe to unlock.
+Different from encrypting full disk, file based encryption can
+encrypt each file via different keys. The most noticeable usage
+is that different user profile now using different keys.
+Previously, different users share the same disk encryption key.
+OK, user/developer visible change is that we will have a so-called
+direct boot feature.
+Previously after rebooting, a user has to unlock the entire disk
+(same password as the primary user), on a black screen with password
+input, and then unlock his own profile (mostly primary user).
+Now, you can reboot directly to user profile unlock. No black screen
+unlocking any more. For developer, you can run your app in user0
+space which doesn't require user's profile unlocked.
+That means your app can run before user input their
+password and swipe to unlock.
 ```
 
 Analysis
@@ -66,13 +75,32 @@ path: system/vold/Ext4Crypt.cpp
 ```
 e4crypt_init_user0()
  |
- +-> create_and_install_user_keys
+ +-> create_and_install_user_keys (/data/misc/vold/user_keys)
  |
  +-> load_all_de_keys
  |
- +-> e4crypt_prepare_user_storage
+ +-> e4crypt_prepare_user_storage -> ensure_policy
  |
  +- non-FBE -> e4crypt_unlock_user_key(0, 0, "!", "!")
+```
+
+* /data/misc/vold/user_keys
+
+```
+sagit:/data/misc/vold/user_keys # ls -l de/0/
+total 104
+-rw------- 1 root root    92 1970-02-02 03:34 encrypted_key
+-rw------- 1 root root   427 1970-02-02 03:34 keymaster_key_blob
+-rw------- 1 root root 16384 1970-02-02 03:34 secdiscardable
+-rw------- 1 root root    10 1970-02-02 03:34 stretching
+-rw------- 1 root root     1 1970-02-02 03:34 version
+sagit:/data/misc/vold/user_keys # ls -l ce/0/current/
+total 104
+-rw------- 1 root root    92 1970-02-02 03:34 encrypted_key
+-rw------- 1 root root   427 1970-02-02 03:34 keymaster_key_blob
+-rw------- 1 root root 16384 1970-02-02 03:34 secdiscardable
+-rw------- 1 root root    10 1970-02-02 03:34 stretching
+-rw------- 1 root root     1 1970-02-02 03:34 version
 ```
 
 ### 2.zygote
@@ -144,7 +172,6 @@ e4crypt_init_user0()
 01-15 06:50:36.706  1639  3247 D VoldConnector: SND -> {3 fstrim dotrim}
 01-15 06:50:36.707  1639  3248 D VoldConnector: RCV <- {200 3 Command succeeded}
 01-15 06:50:36.707   592  4887 D vold    : Starting trim of /data
-
 ```
 
 #### SOURCES
@@ -152,7 +179,11 @@ e4crypt_init_user0()
 ```
 PackageManagerService
  |
- +-> reconcileAppsDataLI
+ +-> reconcileAppsDataLI +-> prepareAppDataLeafLIF -> mInstaller.createAppData -> create_app_data(installd)
+     |                   |
+     +-> prepareAppDataLIF  <-+
+     |                        |
+     +-> maybeMigrateAppDataLIF
 ```
 
 ### 5.vold
