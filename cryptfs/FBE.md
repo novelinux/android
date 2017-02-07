@@ -79,7 +79,11 @@ e4crypt_init_user0()
  |
  +-> load_all_de_keys
  |
- +-> e4crypt_prepare_user_storage -> ensure_policy
+ +-> e4crypt_prepare_user_storage
+ |   |
+ |   +-> ensure_policy
+ |       |
+ |       +-> e4crypt_policy_ensure -> e4crypt_policy_set -> ioctl(fd, EXT4_IOC_SET_ENCRYPTION_POLICY, &eep);
  |
  +- non-FBE -> e4crypt_unlock_user_key(0, 0, "!", "!")
 ```
