@@ -23,6 +23,26 @@ That means your app can run before user input their
 password and swipe to unlock.
 ```
 
+Direct Boot:
+----------------------------------------
+
+* Android官方文档: https://developer.android.com/training/articles/direct-boot.html#notification
+
+当设备通电但用户尚未解锁设备时，Android 7.0以安全的直接引导模式(Direct boot)运行。为了支持这一点，系统提供了两个数据存储位置：
+
+* 设备加密存储: 这是在直接引导模式期间和用户解锁设备后可用的存储位置。(/data/user_de/)
+* 凭证加密存储: 它是默认存储位置，仅在用户解锁设备后可用。(/data/data --> /data/user/)
+
+默认情况下，应用程序不会在直接引导模式下运行。如果您的应用程序需要在直接引导模式下采取行动，您可以注册应在此模式下运行的应用程序组件。在直接引导模式下需要运行的应用程序的一些常见用例包括：
+
+1.已安排通知的应用程式，例如闹钟应用程式。
+2.提供重要用户通知的应用，例如短信应用。
+3. 提供无障碍服务的应用，如Talkback。
+
+如果您的应用程序需要在直接引导模式下运行时访问数据，请使用设备加密存储。设备加密存储包含使用仅在设备执行成功验证的引导后可用的密钥加密的数据。
+对于应使用与用户凭据关联的密钥（如PIN或密码）加密的数据，请使用凭据加密存储。凭证加密存储仅在用户成功解锁设备后才可用，直到用户再次重新启动设备为止。
+如果用户在解锁设备后启用锁定屏幕，则不会锁定凭证加密存储。
+
 Analysis
 ----------------------------------------
 
@@ -68,7 +88,7 @@ Analysis
 01-15 06:48:24.589   592   598 I vold    : Policy for /data/user_de/0 set to 5b317534021c2524
 ```
 
-#### SOURCES
+#### Call Stack
 
 path: system/vold/Ext4Crypt.cpp
 
@@ -87,6 +107,8 @@ e4crypt_init_user0()
  |
  +- non-FBE -> e4crypt_unlock_user_key(0, 0, "!", "!")
 ```
+
+* https://github.com/novelinux/android/blob/master/cryptfs/DE_create.md
 
 * /data/misc/vold/user_keys
 
@@ -201,21 +223,7 @@ PackageManagerService
 01-15 06:50:41.585  1639  1755 D CryptdConnector: SND -> {2 cryptfs unlock_user_key 0 0 [scrubbed] [scrubbed]}
 01-15 06:50:41.586   592   598 D vold    : e4crypt_unlock_user_key 0 serial=0 token_present=0
 01-15 06:50:41.586   592   598 W vold    : Tried to unlock already-unlocked key for user 0
-```
-
-#### SOURCES
-
-```
-finishUserBoot
- |
- +-> maybeUnlockUser
-     |
-     +-> unlockUserCleared
-```
-
-#### LOG
-
-```
+...
 01-15 06:50:41.586  1639  3249 D CryptdConnector: RCV <- {200 2 Command succeeded}
 01-15 06:50:41.587  1639  1755 D CryptdConnector: SND -> {3 cryptfs prepare_user_storage ! 0 0 2}
 01-15 06:50:41.587   592   598 D vold    : e4crypt_prepare_user_storage for volume null, user 0, serial 0, flags 2
@@ -232,6 +240,36 @@ finishUserBoot
 01-15 06:50:41.635   592   598 V vold    : Starting restorecon of /data/misc_ce/0
 01-15 06:50:41.636   592   598 V vold    : Finished restorecon of /data/misc_ce/0
 01-15 06:50:41.637  1639  3249 D CryptdConnector: RCV <- {200 5 Command succeeded}
+```
+
+#### Call Stack
+
+```
+ActivityManagerService.systemReady
+ |
+UserController.startUser
+ |
+UserController.finishUserBoot
+ |
+UserController.maybeUnlockUser
+ |
+UserController.unlockUserCleared
+ |
+ +-> MountService.unlockUserKey
+ |   |
+ |   +-> e4crypt_unlock_user_key
+ |
+UserController.finishUserUnlocking
+ |
+UserManagerService.onBeforeUnlockUser
+ |
+PackageManagerService.prepareUserData
+ |
+PackageManagerService.prepareUserDataLI
+ |
+MountService.prepareUserStorage
+ |
+ +-> e4crypt_prepare_user_storage
 ```
 
 ### 6.UserManagerService
