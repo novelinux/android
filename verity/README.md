@@ -3,8 +3,10 @@ Android DM-verity
 
 * https://source.android.com/security/verifiedboot/dm-verity.html
 
-Implementation
+Generate Implementation
 ----------------------------------------
+
+path: build/tools/releasetools/build_image.py
 
 * 1.Generate an ext4 system image.
 * 2.Generate a hash tree for that image.
@@ -56,7 +58,6 @@ system_verity_block_device=/dev/block/bootdevice/by-name/system
 
 #### BuildImage
 
-path: build/tools/releasetools/build_image.py
 ```
 def BuildImage(in_dir, prop_dict, out_file, target_out=None):
   """Build an image to out_file from in_dir with property prop_dict.
@@ -194,7 +195,6 @@ you have only a single hash.
 The result of this is a single hash, which is your root hash. This and your salt
 are used during the construction of your dm-verity mapping hash table.
 
-
 #### BuildVerityTree
 
 ```
@@ -217,21 +217,35 @@ build_verity_tree.cpp 文件中， 那么算法怎么实现的，就不去管它
 hash tree的原因官网上也提到了，最初他使用hash table来实现，后来数据太大之后，效率不好，
 所以使用hash tree，hash tree在处理大量数据的时候效率就非常高。产生的hash tree的结构就如下所示:
 
+Each node in the tree is a cryptographic hash.  If it is a leaf node, the hash
+of some data block on disk is calculated. If it is an intermediary node,
+the hash of a number of child nodes is calculated.
+
+Each entry in the tree is a collection of neighboring nodes that fit in one
+block.  The number is determined based on block_size and the size of the
+selected cryptographic digest algorithm.  The hashes are linearly-ordered in
+this entry and any unaligned trailing space is ignored but included when
+calculating the parent node.
+
+The tree looks something like:
+
 ```
-                             [    root    ]
-                            /    . . .    \
-                 [entry_0]                 [entry_1]
-                /  . . .  \                 . . .   \
-     [entry_0_0]   . . .  [entry_0_127]    . . . .  [entry_1_127]
-       / ... \             /   . . .  \             /           \
- blk_0 ... blk_127  blk_16256   blk_16383      blk_32640 . . . blk_32767
+alg = sha256, num_blocks = 32768, block_size = 4096
+
+                                 [   root    ]
+                                /    . . .    \
+                     [entry_0]                 [entry_1]
+                    /  . . .  \                 . . .   \
+         [entry_0_0]   . . .  [entry_0_127]    . . . .  [entry_1_127]
+           / ... \             /   . . .  \             /           \
+     blk_0 ... blk_127  blk_16256   blk_16383      blk_32640 . . . blk_32767
 ```
+
 
 最后只有一个根hash，叶节点就是dm-verity所需要verify的分区的划分的一个个小块，它这里规定了
 每个块以4k的大小来划分。所以举个例子，要验证的system分区如果有800M，那么就有200万个块。
 所以说通过叶节点以及他的父hash到根hash就是描述了system.img的变化情况。这样的话用
 hash table来存效率就很差，所以使用hash tree来存速度更快。最后呢再主要保存这个root hash。
-
 
 ### BuildVerityMetadata
 
@@ -294,7 +308,6 @@ def build_verity_table(block_device, data_blocks, root_hash, salt):
 
 verity-table就是为了去描述之前生成的hash tree,所以建立起来的verity table形如下面这样。
 说白了，verity-table只是一个描述hashtree的字符串，看一看他是如何描述hash tree的。
-下面这个例子选自Linux 文档，并非实际的system.img的hash tree的verity table。
 
 * 第一个参数是版本，只有0和1，大多数情况下填1，不去深究。
 * 第二个，第三个参数描述的是所保护的分区，这个例子中dm-verity保护的分区是/dev/sda1。
@@ -305,6 +318,7 @@ verity-table就是为了去描述之前生成的hash tree,所以建立起来的v
 * 第十个参数是加密算法加的盐。
 Ok，到这我们可以看到verity-table描述了叶节点和根hash以及hash的算法等。这样就通过一个字符串就把整棵树的形状就描绘出来了。
 
+* Documentation: linux/Documentation/device-mapper/verity.txt
 
 ### Sign that dm-verity table to produce a table signature.
 
@@ -341,11 +355,19 @@ metadata中，最后返回给build脚本。
 
 ### Bundle the table signature and dm-verity table into verity metadata
 
-Bundle the table signature and dm-verity table into verity metadata. The entire block of metadata is versioned so it may be extended, such as to add a second kind of signature or change some ordering.
+Bundle the table signature and dm-verity table into verity metadata.
+The entire block of metadata is versioned so it may be extended,
+such as to add a second kind of signature or change some ordering.
 
-As a sanity check, a magic number is associated with each set of table metadata that helps identify the table. Since the length is included in the ext4 system image header, this provides a way to search for the metadata without knowing the contents of the data itself.
+As a sanity check, a magic number is associated with each set of
+table metadata that helps identify the table. Since the length
+is included in the ext4 system image header, this provides a
+way to search for the metadata without knowing the contents of the data itself.
 
-This makes sure you haven't elected to verify an unverified partition. If so, the absence of this magic number will halt the verification process. This number resembles:
+This makes sure you haven't elected to verify an unverified partition.
+If so, the absence of this magic number will halt the verification process.
+This number resembles:
+
 0xb001b001
 
 The byte values in hex are:
@@ -414,4 +436,410 @@ def BuildVerifiedImage(data_image_path, verity_image_path,
                      "Could not append verity data!"):
     return False
   return True
+```
+
+##### BuildVerityFEC
+
+```
+def BuildVerityFEC(sparse_image_path, verity_path, verity_fec_path):
+  cmd = "fec -e %s %s %s" % (sparse_image_path, verity_path, verity_fec_path)
+  print cmd
+  status, output = commands.getstatusoutput(cmd)
+  if status:
+    print "Could not build FEC data! Error: %s" % output
+    return False
+  return True
+```
+
+##### Append2Simg
+
+```
+def Append2Simg(sparse_image_path, unsparse_image_path, error_message):
+  """Appends the unsparse image to the given sparse image.
+
+  Args:
+    sparse_image_path: the path to the (sparse) image
+    unsparse_image_path: the path to the (unsparse) image
+  Returns:
+    True on success, False on failure.
+  """
+  cmd = "append2simg %s %s"
+  cmd %= (sparse_image_path, unsparse_image_path)
+  print cmd
+  status, output = commands.getstatusoutput(cmd)
+  if status:
+    print "%s: %s" % (error_message, output)
+    return False
+  return True
+```
+
+fs_mgr Implementation
+----------------------------------------
+
+### fs_mgr_mount_all
+
+path: system/core/fs_mgr/fs_mgr.c
+```
+int fs_mgr_mount_all(struct fstab *fstab, int mount_mode)
+{
+        ...
+
+        if ((fstab->recs[i].fs_mgr_flags & MF_VERIFY) && device_is_secure()) {
+            int rc = fs_mgr_setup_verity(&fstab->recs[i]);
+            if (device_is_debuggable() && rc == FS_MGR_SETUP_VERITY_DISABLED) {
+                INFO("Verity disabled");
+            } else if (rc != FS_MGR_SETUP_VERITY_SUCCESS) {
+                ERROR("Could not set up verified partition, skipping!\n");
+                continue;
+            }
+        }
+        ...
+}
+```
+
+### fs_mgr_setup_verity
+
+#### struct fec_verity_metadata
+
+path: system/extra/libfec/include/fec/io.h
+```
+struct fec_verity_metadata {
+    bool disabled;
+    uint64_t data_size;
+    uint8_t signature[RSANUMBYTES];
+    uint8_t ecc_signature[RSANUMBYTES];
+    const char *table;
+    uint32_t table_length;
+};
+```
+
+#### fec
+
+path: system/core/fs_mgr/fs_mgr_verity.cpp
+```
+struct verity_table_params {
+    char *table;
+    int mode;
+    struct fec_ecc_metadata ecc;
+    const char *ecc_dev;
+};
+
+int fs_mgr_setup_verity(struct fstab_rec *fstab)
+{
+    int retval = FS_MGR_SETUP_VERITY_FAIL;
+    int fd = -1;
+    char *verity_blk_name = NULL;
+    struct fec_handle *f = NULL;
+    struct fec_verity_metadata verity;
+    struct verity_table_params params = { .table = NULL };
+
+    alignas(dm_ioctl) char buffer[DM_BUF_SIZE];
+    struct dm_ioctl *io = (struct dm_ioctl *) buffer;
+    char *mount_point = basename(fstab->mount_point);
+
+    if (fec_open(&f, fstab->blk_device, O_RDONLY, FEC_VERITY_DISABLE,
+            FEC_DEFAULT_ROOTS) < 0) {
+        ERROR("Failed to open '%s' (%s)\n", fstab->blk_device,
+            strerror(errno));
+        return retval;
+    }
+
+    // read verity metadata
+    if (fec_verity_get_metadata(f, &verity) < 0) {
+        ERROR("Failed to get verity metadata '%s' (%s)\n", fstab->blk_device,
+            strerror(errno));
+        goto out;
+    }
+
+#ifdef ALLOW_ADBD_DISABLE_VERITY
+    if (verity.disabled) {
+        retval = FS_MGR_SETUP_VERITY_DISABLED;
+        INFO("Attempt to cleanly disable verity - only works in USERDEBUG\n");
+        goto out;
+    }
+#endif
+
+    // read ecc metadata
+    if (fec_ecc_get_metadata(f, &params.ecc) < 0) {
+        params.ecc.valid = false;
+    }
+
+    params.ecc_dev = fstab->blk_device;
+```
+
+#### create verity device
+
+```
+    // get the device mapper fd
+    if ((fd = open("/dev/device-mapper", O_RDWR)) < 0) {
+        ERROR("Error opening device mapper (%s)\n", strerror(errno));
+        goto out;
+    }
+
+    // create the device
+    if (create_verity_device(io, mount_point, fd) < 0) {
+        ERROR("Couldn't create verity device!\n");
+        goto out;
+    }
+
+    // get the name of the device file
+    if (get_verity_device_name(io, mount_point, fd, &verity_blk_name) < 0) {
+        ERROR("Couldn't get verity device number!\n");
+        goto out;
+    }
+
+    if (load_verity_state(fstab, &params.mode) < 0) {
+        /* if accessing or updating the state failed, switch to the default
+         * safe mode. This makes sure the device won't end up in an endless
+         * restart loop, and no corrupted data will be exposed to userspace
+         * without a warning. */
+        params.mode = VERITY_MODE_EIO;
+    }
+
+    if (!verity.table) {
+        goto out;
+    }
+
+    params.table = strdup(verity.table);
+    if (!params.table) {
+        goto out;
+    }
+
+    // verify the signature on the table
+    if (verify_verity_signature(verity) < 0) {
+        if (params.mode == VERITY_MODE_LOGGING) {
+            // the user has been warned, allow mounting without dm-verity
+            retval = FS_MGR_SETUP_VERITY_SUCCESS;
+            goto out;
+        }
+
+        // invalidate root hash and salt to trigger device-specific recovery
+        if (invalidate_table(params.table, verity.table_length) < 0) {
+            goto out;
+        }
+    }
+
+    INFO("Enabling dm-verity for %s (mode %d)\n", mount_point, params.mode);
+
+    if (fstab->fs_mgr_flags & MF_SLOTSELECT) {
+        // Update the verity params using the actual block device path
+        update_verity_table_blk_device(fstab->blk_device, &params.table);
+    }
+```
+
+#### load_verity_table -> format_verity_table
+
+```
+    // load the verity mapping table
+    if (load_verity_table(io, mount_point, verity.data_size, fd, &params,
+            format_verity_table) == 0) {
+        goto loaded;
+    }
+
+    if (params.ecc.valid) {
+        // kernel may not support error correction, try without
+        INFO("Disabling error correction for %s\n", mount_point);
+        params.ecc.valid = false;
+
+        if (load_verity_table(io, mount_point, verity.data_size, fd, &params,
+                format_verity_table) == 0) {
+            goto loaded;
+        }
+    }
+```
+
+#### load_verity_table -> format_legacy_verity_table
+
+```
+    // try the legacy format for backwards compatibility
+    if (load_verity_table(io, mount_point, verity.data_size, fd, &params,
+            format_legacy_verity_table) == 0) {
+        goto loaded;
+    }
+
+    if (params.mode != VERITY_MODE_EIO) {
+        // as a last resort, EIO mode should always be supported
+        INFO("Falling back to EIO mode for %s\n", mount_point);
+        params.mode = VERITY_MODE_EIO;
+
+        if (load_verity_table(io, mount_point, verity.data_size, fd, &params,
+                format_legacy_verity_table) == 0) {
+            goto loaded;
+        }
+    }
+
+    ERROR("Failed to load verity table for %s\n", mount_point);
+    goto out;
+```
+
+#### resume_verity_table
+
+```
+loaded:
+
+    // activate the device
+    if (resume_verity_table(io, mount_point, fd) < 0) {
+        goto out;
+    }
+```
+
+#### fs_mgr_set_blk_ro
+
+```
+    // mark the underlying block device as read-only
+    fs_mgr_set_blk_ro(fstab->blk_device);
+
+    // assign the new verity block device as the block device
+    free(fstab->blk_device);
+    fstab->blk_device = verity_blk_name;
+    verity_blk_name = 0;
+
+    // make sure we've set everything up properly
+    if (test_access(fstab->blk_device) < 0) {
+        goto out;
+    }
+
+    retval = FS_MGR_SETUP_VERITY_SUCCESS;
+
+out:
+    if (fd != -1) {
+        close(fd);
+    }
+
+    fec_close(f);
+    free(params.table);
+    free(verity_blk_name);
+
+    return retval;
+}
+```
+
+### load_verity_table
+
+```
+static int load_verity_table(struct dm_ioctl *io, char *name, uint64_t device_size, int fd,
+        const struct verity_table_params *params, format_verity_table_func format)
+{
+    char *verity_params;
+    char *buffer = (char*) io;
+    size_t bufsize;
+
+    verity_ioctl_init(io, name, DM_STATUS_TABLE_FLAG);
+
+    struct dm_target_spec *tgt = (struct dm_target_spec *) &buffer[sizeof(struct dm_ioctl)];
+
+    // set tgt arguments
+    io->target_count = 1;
+    tgt->status = 0;
+    tgt->sector_start = 0;
+    tgt->length = device_size / 512;
+    strcpy(tgt->target_type, "verity");
+
+    // build the verity params
+    verity_params = buffer + sizeof(struct dm_ioctl) + sizeof(struct dm_target_spec);
+    bufsize = DM_BUF_SIZE - (verity_params - buffer);
+
+    if (!format(verity_params, bufsize, params)) {
+        ERROR("Failed to format verity parameters\n");
+        return -1;
+    }
+
+    INFO("loading verity table: '%s'", verity_params);
+
+    // set next target boundary
+    verity_params += strlen(verity_params) + 1;
+    verity_params = (char*)(((unsigned long)verity_params + 7) & ~8);
+    tgt->next = verity_params - buffer;
+
+    // send the ioctl to load the verity table
+    if (ioctl(fd, DM_TABLE_LOAD, io)) {
+        ERROR("Error loading verity table (%s)\n", strerror(errno));
+        return -1;
+    }
+
+    return 0;
+}
+```
+
+Kernel Implementation
+----------------------------------------
+
+path: include/uapi/linux/dm-ioctl.h
+```
+/*
+ * A traditional ioctl interface for the device mapper.
+ *
+ * Each device can have two tables associated with it, an
+ * 'active' table which is the one currently used by io passing
+ * through the device, and an 'inactive' one which is a table
+ * that is being prepared as a replacement for the 'active' one.
+ *
+ * DM_VERSION:
+ * Just get the version information for the ioctl interface.
+ *
+ * DM_REMOVE_ALL:
+ * Remove all dm devices, destroy all tables.  Only really used
+ * for debug.
+ *
+ * DM_LIST_DEVICES:
+ * Get a list of all the dm device names.
+ *
+ * DM_DEV_CREATE:
+ * Create a new device, neither the 'active' or 'inactive' table
+ * slots will be filled.  The device will be in suspended state
+ * after creation, however any io to the device will get errored
+ * since it will be out-of-bounds.
+ *
+ * DM_DEV_REMOVE:
+ * Remove a device, destroy any tables.
+ *
+ * DM_DEV_RENAME:
+ * Rename a device or set its uuid if none was previously supplied.
+ *
+ * DM_SUSPEND:
+ * This performs both suspend and resume, depending which flag is
+ * passed in.
+ * Suspend: This command will not return until all pending io to
+ * the device has completed.  Further io will be deferred until
+ * the device is resumed.
+ * Resume: It is no longer an error to issue this command on an
+ * unsuspended device.  If a table is present in the 'inactive'
+ * slot, it will be moved to the active slot, then the old table
+ * from the active slot will be _destroyed_.  Finally the device
+ * is resumed.
+ *
+ * DM_DEV_STATUS:
+ * Retrieves the status for the table in the 'active' slot.
+ *
+ * DM_DEV_WAIT:
+ * Wait for a significant event to occur to the device.  This
+ * could either be caused by an event triggered by one of the
+ * targets of the table in the 'active' slot, or a table change.
+ *
+ * DM_TABLE_LOAD:
+ * Load a table into the 'inactive' slot for the device.  The
+ * device does _not_ need to be suspended prior to this command.
+ *
+ * DM_TABLE_CLEAR:
+ * Destroy any table in the 'inactive' slot (ie. abort).
+ *
+ * DM_TABLE_DEPS:
+ * Return a set of device dependencies for the 'active' table.
+ *
+ * DM_TABLE_STATUS:
+ * Return the targets status for the 'active' table.
+ *
+ * DM_TARGET_MSG:
+ * Pass a message string to the target at a specific offset of a device.
+ *
+ * DM_DEV_SET_GEOMETRY:
+ * Set the geometry of a device by passing in a string in this format:
+ *
+ * "cylinders heads sectors_per_track start_sector"
+ *
+ * Beware that CHS geometry is nearly obsolete and only provided
+ * for compatibility with dm devices that can be booted by a PC
+ * BIOS.  See struct hd_geometry for range limits.  Also note that
+ * the geometry is erased if the device size changes.
+ */
 ```
