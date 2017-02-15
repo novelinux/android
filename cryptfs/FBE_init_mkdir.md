@@ -1,10 +1,23 @@
 FBE the command "mkdir" of init scripts
 ========================================
 
+* LOGS
+
+```
+[    5.612948] ext4_utils: Setting 3fcbc19c policy on /data/bootchart!
+[    5.616033] ext4_utils: Setting 3fcbc19c policy on /data/misc!
+[    5.623805] ext4_utils: Setting 3fcbc19c policy on /data/local!
+[    5.629432] ext4_utils: Setting 3fcbc19c policy on /data/app-private!
+[    5.630260] ext4_utils: Setting 3fcbc19c policy on /data/app-ephemeral!
+[    5.631094] ext4_utils: Setting 3fcbc19c policy on /data/app-asec!
+[    5.631901] ext4_utils: Setting 3fcbc19c policy on /data/app-lib!
+[    5.633430] ext4_utils: Setting 3fcbc19c policy on /data/app!
+```
+
 mkdir
 ----------------------------------------
 
-### 1.do_mkdir
+### do_mkdir
 
 path: system/core/init/builtins.cpp
 ```
@@ -58,7 +71,7 @@ static int do_mkdir(const std::vector<std::string>& args) {
 }
 ```
 
-### 2.e4crypt_is_native
+### e4crypt_is_native
 
 path: path: system/extras/ext4_utils/ext4_crypt.cpp
 ```
@@ -69,7 +82,7 @@ bool e4crypt_is_native() {
 }
 ```
 
-### 3.e4crypt_set_directory_policy
+### e4crypt_set_directory_policy
 
 path: system/extras/ext4_utils/ext4_crypt_init_extensions.cpp
 ```

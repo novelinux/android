@@ -320,6 +320,49 @@ static bool load_all_de_keys() {
 }
 ```
 
+random_key
+----------------------------------------
+
+path: system/vold/Ext4Crypt.cpp
+```
+static bool random_key(std::string* key) {
+    if (android::vold::ReadRandomBytes(EXT4_AES_256_XTS_KEY_SIZE, *key) != 0) {
+        // TODO status_t plays badly with PLOG, fix it.
+        LOG(ERROR) << "Random read failed";
+        return false;
+    }
+    return true;
+}
+```
+
+### ReadRandomBytes
+
+path: system/vold/Utils.cpp
+```
+status_t ReadRandomBytes(size_t bytes, std::string& out) {
+    out.clear();
+
+    int fd = TEMP_FAILURE_RETRY(open("/dev/urandom", O_RDONLY | O_CLOEXEC | O_NOFOLLOW));
+    if (fd == -1) {
+        return -errno;
+    }
+
+    char buf[BUFSIZ];
+    size_t n;
+    while ((n = TEMP_FAILURE_RETRY(read(fd, &buf[0], std::min(sizeof(buf), bytes)))) > 0) {
+        out.append(buf, n);
+        bytes -= n;
+    }
+    close(fd);
+
+    if (bytes == 0) {
+        return OK;
+    } else {
+        return -EIO;
+    }
+}
+```
+
 install_key
 ----------------------------------------
 
@@ -342,6 +385,24 @@ static bool install_key(const std::string& key, std::string* raw_ref) {
     }
     LOG(DEBUG) << "Added key " << key_id << " (" << ref << ") to keyring " << device_keyring
                << " in process " << getpid();
+    return true;
+}
+```
+
+### fill_key
+
+path: system/vold/Ext4Crypt.cpp
+```
+static bool fill_key(const std::string& key, ext4_encryption_key* ext4_key) {
+    if (key.size() != EXT4_AES_256_XTS_KEY_SIZE) {
+        LOG(ERROR) << "Wrong size key " << key.size();
+        return false;
+    }
+    static_assert(EXT4_AES_256_XTS_KEY_SIZE <= sizeof(ext4_key->raw), "Key too long!");
+    ext4_key->mode = EXT4_ENCRYPTION_MODE_AES_256_XTS;
+    ext4_key->size = key.size();
+    memset(ext4_key->raw, 0, sizeof(ext4_key->raw));
+    memcpy(ext4_key->raw, key.data(), key.size());
     return true;
 }
 ```
@@ -370,6 +431,66 @@ static std::string generate_key_ref(const char* key, int length) {
 }
 ```
 
+### keyname
+
+path: system/vold/Ext4Crypt.cpp
+```
+static std::string keyname(const std::string& raw_ref) {
+    std::ostringstream o;
+    o << "ext4:";
+    for (auto i : raw_ref) {
+        o << std::hex << std::setw(2) << std::setfill('0') << (int)i;
+    }
+    return o.str();
+}
+```
+
+### e4crypt_keyring
+
+path: system/vold/Ext4Crypt.cpp
+```
+// Get the keyring we store all keys in
+static bool e4crypt_keyring(key_serial_t* device_keyring) {
+    *device_keyring = keyctl_search(KEY_SPEC_SESSION_KEYRING, "keyring", "e4crypt", 0);
+    if (*device_keyring == -1) {
+        PLOG(ERROR) << "Unable to find device keyring";
+        return false;
+    }
+    return true;
+}
+```
+
+### system calls
+
+* add_key
+
+path: system/extras/ext4_utils/key_control.cpp
+```
+key_serial_t add_key(const char *type,
+                     const char *description,
+                     const void *payload,
+                     size_t plen,
+                     key_serial_t ringid)
+{
+    return syscall(__NR_add_key, type, description, payload, plen, ringid);
+}
+```
+
+* keyctl_search
+
+path: system/extras/ext4_utils/key_control.cpp
+```
+long keyctl_search(key_serial_t ringid, const char *type,
+                   const char *description, key_serial_t destringid)
+{
+    return keyctl(KEYCTL_SEARCH, ringid, type, description, destringid);
+}
+```
+
+* Documentation
+
+path: kernel/Documentation/security/keys.txt
+
 store_key
 ----------------------------------------
 
@@ -392,6 +513,47 @@ static bool store_key(const std::string& key_path, const std::string& tmp_path,
         return false;
     }
     LOG(DEBUG) << "Created key " << key_path;
+    return true;
+}
+```
+
+### android::vold::storeKey
+
+path: system/vold/KeyStorage.cpp
+```
+bool storeKey(const std::string& dir, const KeyAuthentication& auth, const std::string& key) {
+    if (TEMP_FAILURE_RETRY(mkdir(dir.c_str(), 0700)) == -1) {
+        PLOG(ERROR) << "key mkdir " << dir;
+        return false;
+    }
+    if (!writeStringToFile(kCurrentVersion, dir + "/" + kFn_version)) return false;
+    std::string secdiscardable;
+    if (ReadRandomBytes(SECDISCARDABLE_BYTES, secdiscardable) != OK) {
+        // TODO status_t plays badly with PLOG, fix it.
+        LOG(ERROR) << "Random read failed";
+        return false;
+    }
+    if (!writeStringToFile(secdiscardable, dir + "/" + kFn_secdiscardable)) return false;
+    std::string stretching = auth.secret.empty() ? kStretch_nopassword : getStretching();
+    if (!writeStringToFile(stretching, dir + "/" + kFn_stretching)) return false;
+    std::string salt;
+    if (stretchingNeedsSalt(stretching)) {
+        if (ReadRandomBytes(SALT_BYTES, salt) != OK) {
+            LOG(ERROR) << "Random read failed";
+            return false;
+        }
+        if (!writeStringToFile(salt, dir + "/" + kFn_salt)) return false;
+    }
+    std::string appId;
+    if (!generateAppId(auth, stretching, salt, secdiscardable, &appId)) return false;
+    Keymaster keymaster;
+    if (!keymaster) return false;
+    std::string kmKey;
+    if (!generateKeymasterKey(keymaster, auth, appId, &kmKey)) return false;
+    if (!writeStringToFile(kmKey, dir + "/" + kFn_keymaster_key_blob)) return false;
+    std::string encryptedKey;
+    if (!encryptWithKeymasterKey(keymaster, kmKey, auth, appId, key, &encryptedKey)) return false;
+    if (!writeStringToFile(encryptedKey, dir + "/" + kFn_encrypted_key)) return false;
     return true;
 }
 ```
