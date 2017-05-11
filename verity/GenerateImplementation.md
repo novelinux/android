@@ -34,6 +34,20 @@ MakeVerityEnabledImage
 END
 ```
 
+* Build Logs
+
+```
+Running ['mkuserimg.sh', '-s', '/tmp/tmphUpYR9', 'out/target/product/tissot/obj/PACKAGING/systemimage_intermediates/system.img', 'ext4', '/', '3170938880', '-D', 'out/target/product/tissot/system', '-L', '/', 'out/target/product/tissot/root/file_contexts.bin'] command, exit code = 0
+build_verity_tree -A aee087a5be3b982978c923f566a94613496b417f2af592639bc80d141e34dfe7 out/target/product/tissot/obj/PACKAGING/systemimage_intermediates/system.img /tmp/tmp9TKPlY_verity_images/verity.img
+system/extras/verity/build_verity_metadata.py 3170938880 /tmp/tmp9TKPlY_verity_images/verity_metadata.img d1c859811f935a0b299e3f584820e1ffbbaf37893e59c54800ae8f4719501f1f aee087a5be3b982978c923f566a94613496b417f2af592639bc80d141e34dfe7 /dev/block/bootdevice/by-name/system verity_signer build/target/product/security/verity.pk8
+cat /tmp/tmp9TKPlY_verity_images/verity_metadata.img >> /tmp/tmp9TKPlY_verity_images/verity.img
+fec -e out/target/product/tissot/obj/PACKAGING/systemimage_intermediates/system.img /tmp/tmp9TKPlY_verity_images/verity.img /tmp/tmp9TKPlY_verity_images/verity_fec.img
+cat /tmp/tmp9TKPlY_verity_images/verity_fec.img >> /tmp/tmp9TKPlY_verity_images/verity.img
+append2simg out/target/product/tissot/obj/PACKAGING/systemimage_intermediates/system.img /tmp/tmp9TKPlY_verity_images/verity.img
+[ 99% 12153/12154] Install system fs image: out/target/product/tissot/system.img
+out/target/product/tissot/system.img+ maxsize=3288637440 blocksize=135168 total=2812839568 reserve=33251328
+```
+
 ## Generate an ext4 system image
 
 ### fs_config
