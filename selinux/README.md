@@ -402,3 +402,4 @@ allow installd cache_file:dir { write };
 
 复杂案例：
 如下所示的案例是一个进程违反SEAndroid安全策略的一个稍微复杂的案例：
+https://github.com/novelinux/android/blob/master/selinux/selinux_issue1.md
