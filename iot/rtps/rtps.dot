@@ -1,0 +1,13 @@
+digraph hierarchy {
+
+   nodesep=1.0 // increases the separation between nodes
+
+   node [color=Red,fontname=Courier,shape=box] // All nodes will this shape and colour
+   edge [color=Blue, style=dashed] // All the lines look like this
+
+   Domain->{Participant ParticipantImpl}
+   ParticipantImpl->{Publisher PublisherImpl}
+   RTPSDomain->{RTPSParticipant RTPSParticipantImpl}
+   RTPSParticipantImpl->{RTPSWriter}
+   {rank=same;ITManager Participant ParticipantImpl}  // Put them on the same level
+}
