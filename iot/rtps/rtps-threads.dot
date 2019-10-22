@@ -1,4 +1,4 @@
-digraph create_publisher
+digraph threads
 {
         1[label="thread1(main thread)"]
         2[label="thread2"]
