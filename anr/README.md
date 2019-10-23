@@ -165,6 +165,23 @@ InputDispatcher与窗口之间的跨进程通信主要通过InputChannel来完�
 
 （6）输入事件由InputDispatcher调度，待处理的输入事件都会进入队列中等待，设计了一个等待超时的判断，超时机制的实现在Native层。以上就是输入事件ANR监测机制；具体逻辑请参考相关源码；
 
+### Broadcast处理超时
+
+应用程序可以注册广播接收器，实现BroadcastReceiver.onReceive()方法来完成对广播的处理。通常，这个方法是在主线程执行的，Android限定它执行时间不能超过10秒，否则，就会引发ANR。
+onReceive()也可以调度在其他线程执行，通过Context.registerReceiver(BroadcastReceiver, IntentFilter, String, Handler)这个方法注册广播接收器， 可以指定一个处理的Handler，将onReceive()调度在非主线程执行。
+
+这里先把问题抛出来了：
+
+1.Android如何将广播投递给各个应用程序？
+2.Android如何检测广播处理超时？
+
+AMS维护了两个广播队列BroadcastQueue:
+
+foreground queue，前台队列的超时时间是10秒
+background queue，后台队列的超时时间是60秒
+
+之所以有两个，就是因为要区分的不同超时时间。所有发送的广播都会进入到队列中等待调度，在发送广播时，可以通过Intent.FLAG_RECEIVER_FOREGROUND参数将广播投递到前台队列。 AMS线程会不断地从队列中取出广播消息派发到各个接收器(BroadcastReceiver)。当要派发广播时，AMS会调用BroadcastQueue.scheduleBroadcastsLocked()方法
+
 ### ANR报告机制
 
 无论哪种类型的ANR发生以后，最终都会调用 AppErrors.appNotResponding() 方法，所谓“殊途同归”。这个方法的职能就是向用户或开发者报告ANR发生了。 最终的表现形式是：弹出一个对话框，告诉用户当前某个程序无响应;输入一大堆与ANR相关的日志，便于开发者解决问题。
@@ -176,6 +193,21 @@ InputDispatcher与窗口之间的跨进程通信主要通过InputChannel来完�
 ### 总结
 
 1. ANR的监测机制：首先分析Service和输入事件大致工作流程，然后从Service，InputEvent两种不同的ANR监测机制的源码实现开始，分析了Android如何发现各类ANR。在启动服务、输入事件分发时，植入超时检测，用于发现ANR。
+
+ANR监测机制包含三种：
+
+* Service ANR，前台进程中Service生命周期不能超过20秒，后台进程中Service的生命周期不能超过200秒。 在启动Service时，抛出定时消息SERVICE_TIMEOUT_MSG或SERVICE_BACKGOURND_TIMEOUT_MSG，如果定时消息响应了，则说明发生了ANR
+
+* Broadcast ANR，前台的“串行广播消息”必须在10秒内处理完毕，后台的“串行广播消息”必须在60秒处理完毕， 每派发串行广播消息到一个接收器时，都会抛出一个定时消息BROADCAST_TIMEOUT_MSG，如果定时消息响应，则判断是否广播消息处理超时，超时就说明发生了ANR
+
+* Input ANR，输入事件必须在5秒内处理完毕。在派发一个输入事件时，会判断当前输入事件是否需要等待，如果需要等待，则判断是否等待已经超时，超时就说明发生了ANR
+
+ANR监测机制实际上是对应用程序主线程的要求，要求主线成必须在限定的时间内，完成对几种操作的响应;否则，就可以认为应用程序主线程失去响应能力。
+
+从ANR的三种监测机制中，我们看到不同超时机制的设计：
+
+Service和Broadcast都是由AMS调度，利用Handler和Looper，设计了一个TIMEOUT消息交由AMS线程来处理，整个超时机制的实现都是在Java层； InputEvent由InputDispatcher调度，待处理的输入事件都会进入队列中等待，设计了一个等待超时的判断，超时机制的实现在Native层
+
 2.ANR的报告机制：分析Android如何输出ANR日志。当ANR被发现后，两个很重要的日志输出是：CPU使用情况和进程的函数调用栈，这两类日志是我们解决ANR问题的利器。
-3. 监测ANR的核心原理是消息调度和超时处理。
-4. 只有被ANR监测的场景才会有ANR报告以及ANR提示框。
+3.监测ANR的核心原理是消息调度和超时处理。
+4.只有被ANR监测的场景才会有ANR报告以及ANR提示框。
