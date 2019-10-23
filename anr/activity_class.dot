@@ -1,0 +1,22 @@
+digraph ActivityClass {
+  node [style=filled];
+  color = lightgrey;
+
+  a1[label="Context"]
+  a2[label="ContextWrapper"]
+  a3[label="ContextThemeWrapper"]
+  a4[label="Activity"]
+
+  a4->a3->a2->a1;
+
+  a5[label="ContextImpl"]
+  a2->a5;
+
+  a6[label="ActivityManagerProxy"]
+  a7[label="ActivityManagerService"]
+  a8[label="IActivityManager"]
+
+  a5->a6;
+  a6->a8;
+  a7->a8;
+}

@@ -1,0 +1,29 @@
+digraph ServiceStart {
+
+  subgraph MainThread {
+    node [style=filled];
+    color = lightgrey;
+
+    a1[label="ContextImpl.startService"]
+    a2[label="ContextImpl.startServiceCommon"]
+    a3[label="ActivityManager.getService().startService"]
+    a4[label="ActivityManagerService.startService"]
+    a5[label="ActivityServices.startServiceLocked"]
+    a6[label="ActivityServices.1startServiceInnerLocked"]
+    a7[label="ActivityServices.bringUpServiceLocked"]
+    a8[label="ActivityServices.realStartServiceLocked"]
+    a9[label="ProcessRecord.thread.scheduleCreateService"]
+    a10[label="ApplicationThread.scheduleCreateService"]
+    a11[label="ActivityThread.scheduleCreateService"]
+    a12[label="ActivityThread.handleCreateService"]
+    a13[label="service.onCreate"]
+
+    a1->a2->a3->a4->a5->a6->a7->a8->a9->a10->a11->a12->a13;
+  }
+
+  start -> a1;
+  a13 -> end;
+
+  start [shape=Mdiamond];
+  end [shape=Msquare];
+}

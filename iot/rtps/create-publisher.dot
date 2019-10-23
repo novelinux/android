@@ -1,23 +1,22 @@
-digraph create_publisher
-{
-        1[label="Domain::createPublisher"]
-        11[label="ParticipantImpl::createPublisher"]
-        111[label="new PublisherImpl"]
-        112[label="new Publisher"]
-        113[label="RTPSDomain::createRTPSWriter"]
-        114[label="RTPSParticipantImpl::registerWriter"]
-        init -> 1;
-        1 -> 11;
-        11 -> 111;
-        11 -> 112;
-        11 -> 113;
-        11 -> 114;
-        1131[label="RTPSParticipantImpl::createWriter"]
-        11311[label="RTPSParticipantImpl::get_persistence_service"]
-        11312[label="new StatefulWriter"]
-        11313[label="RTPSParticipantImpl::createSendResources"]
-        113 -> 1131;
-        1131 -> 11311;
-        1131 -> 11312;
-        1131 -> 11313;
+digraph createPublisher {
+
+  subgraph MainThread {
+    node [style=filled];
+    color = lightgrey;
+
+    a1[label="Domain::createPublisher"]
+    a2[label="ParticipantImpl::createPublisher"]
+    a3[label="RTPSDomain::createRTPSWriter"]
+    a4[label="RTPSParticipantImpl::createWriter"]
+    a5[label="RTPSParticipantImpl::createSendResources"]
+  }
+
+  subgraph AsyncWriterThread {
+  }
+
+  start -> a1 -> a2 -> a3 -> a4 -> a5;
+  a5 -> end;
+
+  start [shape=Mdiamond];
+  end [shape=Msquare];
 }
