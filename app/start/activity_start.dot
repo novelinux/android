@@ -14,10 +14,12 @@ digraph ActivityStart {
     label = "system_server";
 
     b1[label="ActivityManagerService.startProccess"]
-    b2[label="ActivityManagerService.realStartActivityLocked"]
-    b3[label="ApplicationThreadProxy.scheduleLaunchActivity"]
 
-    b1 -> b2 -> b3;
+    b2[label="ActivityStackSupervisor.realStartActivityLocked"]
+    b3[label="ClientLifecycleManager.scheduleTransaction"]
+    b4[label="ApplicationThreadProxy.scheduleTransaction"]
+
+    b2 -> b3 -> b4;
   }
 
   subgraph zygote {
@@ -32,20 +34,24 @@ digraph ActivityStart {
     node [style=filled];
     color = lightgrey;
 
-    d1[label="ApplicationThread.scheduleLaunchActivity"]
-    d2[label="ActivityThread.handleLunchActivity"]
-    d3[label="Activity.onCreate"]
-    d4[label="ActivityManagerProxy.attachApplication"]
-    d1 -> d2 -> d3;
+    d1[label="ActivityThread.main"]
+    d2[label="ActivityManagerProxy.attachApplication"]
+
+    d3[label="ActivityThread.handleLunchActivity"]
+    d4[label="ActivityThread.performLaunchActivity"]
+    d5[label="Activity.onCreate"]
+
+    d1 -> d2;
+    d3 -> d4 -> d5;
   }
 
   start -> a1;
   a1 -> b1;
   b1 -> c1;
-  c1 -> d4;
-  d4 -> b2;
-  b3 -> d1;
-  d3 -> end;
+  c1 -> d1;
+  d2 -> b2;
+  b4 -> d3;
+  d5 -> end;
 
   start [shape=Mdiamond];
   end [shape=Msquare];
