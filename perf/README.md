@@ -1,5 +1,7 @@
 # Android Performance
 
+https://developer.android.com/studio/profile
+
 ## App Performance
 
 [App Performance](./app_perf.md)
