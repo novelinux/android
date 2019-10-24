@@ -1,0 +1,95 @@
+digraph ActivityStart {
+
+  subgraph Launcher {
+    node [style=filled];
+    color = blue;
+    label = "Launcher";
+
+    a1[label="ActivityManagerProxy.startActivity"]
+  }
+
+  subgraph system_server {
+    node [style=filled];
+    color = lightgrey;
+    label = "system_server";
+
+    b1[label="ActivityManagerService.startActivity"]
+    b2[label="ActivityTaskManagerService.startActivity"]
+    b3[label="ActivityTaskManagerService.startActivityAsUser"]
+    b4[label="ActivityStartController.obtainStarter(startActivityAsUser)"]
+    b5[label="ActivityStarter.execute"]
+    b6[label="ActivityStarter.startActivityMayWait"]
+    b7[label="ActivityStarter.startActivity"]
+    b8[label="ActivityStarter.startActivityUnchecked"]
+    b9[label="RootActivityContainer.resumeFocusedStacksTopActivities"]
+    b10[label="ActivityStack.resumeTopActivityUncheckedLocked"]
+    b11[label="ActivityStack.resumeTopActivityInnerLocked"]
+    b12[label="ActivityStackSupervisor.startSpecificActivityLocked"]
+    b13[label="ActivityManagerService.startProccess"]
+    b14[label="ActivityManagerService.startProccessLocked"]
+
+    b1->b2->b3->b4->b5->b6->b7->b8->b9->b10->b11->b12->b13->b14;
+
+    b15[label="ActivityManagerService.attachApplication"]
+    b16[label="ActivityManagerService.attachApplicationLocked"]
+
+    b15->b16;
+
+    b17[label="ActivityTaskManagerService.attachApplication"]
+    b18[label="RootActivityContainer.attachApplication"]
+    b19[label="ActivityStackSupervisor.realStartActivityLocked"]
+    b20[label="ClientLifecycleManage.scheduleTransaction"]
+    b21[label="TransactionExecutor.execute"]
+    b22[label="LaunchActivityItem.execute"]
+    b23[label="ActivityClientRecord.handleLaunchActivity"]
+
+    b16->b17->b18->b19->b20->b21->b22->b23;
+
+    b24[label="ActivityManagerService.finishActivity"]
+  }
+
+  subgraph zygote {
+    node [style=filled];
+    color = lightgrey;
+    label = "zygote";
+
+    c1[label="zygote::fork"]
+  }
+
+  subgraph AppMainThread {
+    node [style=filled];
+    color = lightgrey;
+
+    d1[label="ActivityThread.main"]
+    d2[label="ActivityThread.attach"]
+    d3[label="ActivityManagerProxy.attachApplication"]
+
+    d4[label="ApplicationThread.bindApplication"]
+    d5[label="Application.makeApplication"]
+    d6[label="Instrumentation.newApplication"]
+    d7[label="Instrumentation.instantiateApplication"]
+    d8[label="ClassLoader.loadClass"]
+
+    d9[label="ActivityThread.handleLunchActivity"]
+    d10[label="ActivityThread.performLaunchActivity"]
+    d11[label="Instrumentation.callActivityOnCreate"]
+    d12[label="Activity.onCreate"]
+
+    d1 -> d2 -> d3;
+    d4 -> d5 -> d6 -> d7 -> d8;
+    d9 -> d10 -> d11 -> d12;
+  }
+
+  start -> a1;
+  a1 -> b1;
+  b14 -> c1;
+  c1 -> d1;
+  d3 -> b15;
+  b16 -> d4;
+  b23 -> d9;
+  d10 -> b24;
+  b24 -> end;
+
+  start [shape=Mdiamond];
+  end [shape=Msquare];
+}
