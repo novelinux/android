@@ -22,18 +22,19 @@ digraph G {
     b2[label="WindowManagerGlobal.addView"]
     b3[label="ViewRootImpl.setView"]
     b4[label="ViewRootImpl.requestLayout"]
-    b5[label="ViewRootImpl.scheduleTraversals"]
-    b6[label="TraversalRunnable.run"]
-    b7[label="ViewRootImpl.doTraversal"]
-    b8[label="ViewRootImpl.performTraversals"]
-    b9[label="ViewRootImpl.performMeasure"]
-    b10[label="ViewRootImpl.performLayout"]
-    b11[label="ViewRootImpl.performDraw"]
+    b5[label="ViewRootImpl.checkThread"]
+    b6[label="ViewRootImpl.scheduleTraversals"]
+    b7[label="TraversalRunnable.run"]
+    b8[label="ViewRootImpl.doTraversal"]
+    b9[label="ViewRootImpl.performTraversals"]
+    b10[label="ViewRootImpl.performMeasure"]
+    b11[label="ViewRootImpl.performLayout"]
+    b12[label="ViewRootImpl.performDraw"]
 
-    b0->b1->b2->b3->b4->b5->b6->b7->b8;
-    b8->b9;
-    b8->b10;
-    b8->b11;
+    b0->b1->b2->b3->b4->b5->b6->b7->b8->b9;
+    b9->b10;
+    b9->b11;
+    b9->b12;
   }
 
   start -> a0;
