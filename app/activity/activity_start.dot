@@ -40,12 +40,13 @@ digraph ActivityStart {
     b19[label="ActivityStackSupervisor.realStartActivityLocked"]
     b20[label="ClientLifecycleManage.scheduleTransaction"]
     b21[label="TransactionExecutor.execute"]
-    b22[label="LaunchActivityItem.execute"]
-    b23[label="ActivityClientRecord.handleLaunchActivity"]
+    b22[label="TransactionExecutor.performLifecycleSequence"]
+    b23[label="LaunchActivityItem.execute"]
+    b24[label="ActivityClientRecord.handleLaunchActivity"]
 
-    b16->b17->b18->b19->b20->b21->b22->b23;
+    b16->b17->b18->b19->b20->b21->b22->b23->24;
 
-    b24[label="ActivityManagerService.finishActivity"]
+    b25[label="ActivityManagerService.finishActivity"]
   }
 
   subgraph zygote {
@@ -87,8 +88,8 @@ digraph ActivityStart {
   d3 -> b15;
   b16 -> d4;
   b23 -> d9;
-  d10 -> b24;
-  b24 -> end;
+  d10 -> b25;
+  b25 -> end;
 
   start [shape=Mdiamond];
   end [shape=Msquare];
