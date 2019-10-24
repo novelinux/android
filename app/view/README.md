@@ -10,6 +10,69 @@ Android只在UI主线程修改UI?
 
 关键就是ViewRootImpl的checkThread方法,可以看到，它检查的并不是当前线程是否是UI线程，而是当前线程是否是操作线程。这个操作线程就是创建ViewRootImpl对象的线程.
 
+### SurfaceFlinger-图形合成者
+
+如果说屏幕是消费者，那么SurfaceFlinger相对屏幕来说就是生产者，其具有如下特性：
+
+* 作为上层应用的消费者，硬件层的生产者。
+* 负责图形的合成
+* 和ActivityManagerService一样，是一个系统服务
+
+层每一个界面，其实都对应SufaceFlinger里的一个Surface对象，上层将自己的内容绘制在对应的Surface内，接着，SufaceFlinger需要将所有上层对应的Surface内的图形进行合成，具体看下图：
+
+[Surface Flinger Composite](./surfaceflinger_compose.webp)
+
+SurfaceFlinger就是将多个Surface里的内容进行合成，最后提交到屏幕的后缓冲区，等待屏幕的下一个垂直同步信号的到来，再显示到屏幕上。
+我们会发现SufaceFlinger通过屏幕后缓冲区与屏幕建立联系。同时通过Surface与上层建立联系。从而起到一个承上启下的作用，是Android图形系统结构中的关键组成部分。
+
+为了继续往上层讲，我们需要了解什么是Surface：
+
+* 对应上层的一个Window（对话框、Activity、状态栏）
+* 作为上层图形绘制的画板
+* Canvas是画笔，上层通过调用Canvas的API向Surface上绘制图形
+* Surface内部存在多个缓冲区，形成一个BufferQueue
+
+如果说SurfaceFinger是图形的合成者，那么图形的提供者就是上层。文章一开始就提到，图形的传递是通过Buffer作为载体，Surface是对Buffer的进一步封装，也就是说Surface内部具有多个Buffer供上层使用，如何管理这些Buffer呢？请看下面这个模型：
+
+[Buffer Queue](./buffer_queue.webp)
+
+Surface内部提供一个BufferQueue，与上层和SurfaceFlinger形成一个生产者消费者模型，上层对应Producer，SurfaceFlinger对应Consumer。三者通过Buffer产生联系，每个Buffer都有四种状态：
+
+* Free：可被上层使用
+* Dequeued：出列，正在被上层使用
+* Queued：入列，已完成上层绘制，等待SurfaceFlinger合成
+* Acquired：被获取，SurfaceFlinger正持有该Buffer进行合成
+
+Buffer的一次转移过程大致为：
+
+* 从BufferQueue转移到上层
+* 上层绘制完成再放回BufferQueue
+* 接着SurfaceFlinger再拿去合成
+* 最后又放回BufferQueue
+
+### 上层绘图
+
+上层绘图的大体流程见下图：
+
+[Draw](./draw.webp)
+
+Surface里的Buffer作为上层的画板，Canvas作为画笔，通过调用Canvas的API完成图形的绘制，上层通过调用draw方法来调用Canvas的API，当然这里的draw方法并没有真正的将图形绘制到缓冲区，而是记录了一下绘制命令，具体需要了解DisplayList相关只是，后面会对其进行分析。
+
+#### 从流程上看:
+
+* 测量View的宽高（Measure）
+* 设置View的宽高位置（Layout）
+* 创建显示列表，并执行绘制（Draw）
+* 生成多边形和纹理
+* 对多边形和纹理进行栅格化操作
+
+#### 从执行者的角度看：
+
+CPU：Measure，Layout，纹理和多边形生成，发送纹理和多边形到GPU
+GPU：将CPU生成的纹理和多边形进行栅格化以及合成
+
+上面说的的纹理和多边形还有栅格化以及合成，这里不做具体的讲解，需要了解的是图形的绘制流程需要经过这些操作。从上面的分析可以看出，上层绘制图形时需要经过CPU计算，再经过GPU计算。
+
 ### 显示屏
 
 显示屏上的内容，是从硬件帧缓冲区读取的，大致读取过程为：从Buffer的起始地址开始，从上往下，从左往右扫描整个Buffer，将内容映射到显示屏上：
