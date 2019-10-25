@@ -1,5 +1,7 @@
 ## Handler Message Looper
 
+[Looper Thread](./looper_thread.jpeg)
+
 * 接收消息的“消息队列” —— MessageQueue
 * 阻塞式地从消息队列中接收消息并进行处理的“线程” —— Thread + Looper
 * 可发送的“消息的格式” —— Message
