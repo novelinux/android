@@ -20,3 +20,7 @@ Unable to select a master clock domain because no path can be found from "SYSTRA
 在chrome浏览器的地址栏中输入：chrome://tracing
 之后点击左上角的load加载你生成的test.log.html文件就可以正常查看。
 ```
+
+## Refs
+
+https://www.jianshu.com/p/6bce4e256381

@@ -1,0 +1,271 @@
+$  adb logcat -v time -s ThermalEngine
+--------- beginning of main
+--------- beginning of system
+01-22 00:42:54.475 I/ThermalEngine(  588): Thermal daemon started
+01-22 00:42:54.480 I/ThermalEngine(  588): No target config file, falling back to '/vendor/etc/thermal-engine.conf'
+01-22 00:42:54.481 I/ThermalEngine(  588): devices_manager_init: Init
+01-22 00:42:54.481 I/ThermalEngine(  588): Number of gpus :1
+01-22 00:42:54.481 I/ThermalEngine(  588): Number of cpus :4
+01-22 00:42:54.482 I/ThermalEngine(  588): update_cpu_topology: Cluster info node not found/sys/module/msm_thermal/cluster_info
+01-22 00:42:54.483 E/ThermalEngine(  588): read_int_list_from_file: Read error -1.
+01-22 00:42:54.483 E/ThermalEngine(  588): tmd_add_cpufreq_dev_data: Invalid or no boost freqs
+01-22 00:42:54.496 E/ThermalEngine(  588): read_int_list_from_file: Read error -1.
+01-22 00:42:54.496 E/ThermalEngine(  588): tmd_add_cpufreq_dev_data: Invalid or no boost freqs
+01-22 00:42:54.497 E/ThermalEngine(  588): read_int_list_from_file: Read error -1.
+01-22 00:42:54.497 E/ThermalEngine(  588): tmd_add_cpufreq_dev_data: Invalid or no boost freqs
+01-22 00:42:54.499 E/ThermalEngine(  588): read_int_list_from_file: Read error -1.
+01-22 00:42:54.499 E/ThermalEngine(  588): tmd_add_cpufreq_dev_data: Invalid or no boost freqs
+01-22 00:42:54.518 I/ThermalEngine(  588): MODEM thermal mitigation available.
+01-22 00:42:54.519 I/ThermalEngine(  588): Mitigation:modem[MODEM]:0 pending QMI request succeded
+01-22 00:42:54.520 I/ThermalEngine(  588): Mitigation:vdd_restriction[MODEM]:0 pending QMI request succeded
+01-22 00:42:54.521 I/ThermalEngine(  588): Mitigation:modem_cx[MODEM]:0 pending QMI request succeded
+01-22 00:42:54.523 I/ThermalEngine(  588): Mitigation:modem_proc[MODEM]:0 pending QMI request succeded
+01-22 00:42:54.527 I/ThermalEngine(  588): tmd_init_cluster_devs: No clusters found
+01-22 00:42:54.531 E/ThermalEngine(  588): Could not find npu cooling device
+01-22 00:42:54.531 E/ThermalEngine(  588): tmd_init_npu_device: Invalid NPU level:-1.
+01-22 00:42:54.531 E/ThermalEngine(  588): devices_init: Init NPU TMD failed -12
+01-22 00:42:54.533 I/ThermalEngine(  588): vdd_rstr_init: Could not read /sys/module/msm_thermal/vdd_restriction/enabled
+01-22 00:42:54.534 E/ThermalEngine(  588): Unable to acquire profile handle
+01-22 00:42:54.534 E/ThermalEngine(  588): open/sys/class/power_supply/battery/system_temp_level failed2
+01-22 00:42:54.534 E/ThermalEngine(  588): Unable to init battery charging mitigation to 0
+01-22 00:42:54.534 I/ThermalEngine(  588): sensors_manager_init: Init
+01-22 00:42:54.545 E/ThermalEngine(  588): socket creation success
+01-22 00:42:54.585 E/ThermalEngine(  588): Unable to change to /sys/devices/soc/
+01-22 00:42:54.586 E/ThermalEngine(  588): bcl_setup: Unexpected node error
+01-22 00:42:54.586 E/ThermalEngine(  588): add_tgt_sensor: bcl sensor setup failed failed.
+01-22 00:42:54.586 E/ThermalEngine(  588): add_tgt_sensors_set: Error adding bcl
+01-22 00:42:54.586 E/ThermalEngine(  588): sensors_init: Error adding BCL TS
+01-22 00:42:54.586 E/ThermalEngine(  588): speaker_cal_init_data: ERROR Uknown device
+01-22 00:42:54.586 I/ThermalEngine(  588): Loading config file for virtual sensor
+01-22 00:42:54.586 I/ThermalEngine(  588): Loading configuration file /vendor/etc/thermal-engine.conf
+01-22 00:42:54.589 I/ThermalEngine(  588): Parsing section global
+01-22 00:42:54.589 I/ThermalEngine(  588): Found field 'debug'
+01-22 00:42:54.589 I/ThermalEngine(  588): Debug output enabled from config
+01-22 00:42:54.590 E/ThermalEngine(  588): virtual_sensors_init: Error getting virtual sensors set
+01-22 00:42:54.590 I/ThermalEngine(  588): Loading configuration file /vendor/etc/thermal-engine.conf
+01-22 00:42:54.590 I/ThermalEngine(  588): Parsing section global
+01-22 00:42:54.590 I/ThermalEngine(  588): Found field 'debug'
+01-22 00:42:54.590 I/ThermalEngine(  588): Debug output enabled from config
+01-22 00:42:54.590 I/ThermalEngine(  588): Created section 'CPU-MONITOR'
+01-22 00:42:54.590 I/ThermalEngine(  588): Algo Type 'monitor'
+01-22 00:42:54.591 I/ThermalEngine(  588): Parsing section CPU-MONITOR
+01-22 00:42:54.591 I/ThermalEngine(  588): Found field 'sampling'
+01-22 00:42:54.591 I/ThermalEngine(  588): Found field 'sensor'
+01-22 00:42:54.591 I/ThermalEngine(  588): Found field 'thresholds'
+01-22 00:42:54.591 I/ThermalEngine(  588): Found field 'thresholds_clr'
+01-22 00:42:54.591 I/ThermalEngine(  588): Found field 'actions'
+01-22 00:42:54.591 D/ThermalEngine(  588): action:shutdown
+01-22 00:42:54.591 I/ThermalEngine(  588): Found field 'action_info'
+01-22 00:42:54.591 I/ThermalEngine(  588): Created section 'CX_MITIGATION_MONITOR'
+01-22 00:42:54.591 I/ThermalEngine(  588): Algo Type 'monitor'
+01-22 00:42:54.591 I/ThermalEngine(  588): Parsing section CX_MITIGATION_MONITOR
+01-22 00:42:54.591 I/ThermalEngine(  588): Found field 'sampling'
+01-22 00:42:54.591 I/ThermalEngine(  588): Found field 'sensor'
+01-22 00:42:54.591 I/ThermalEngine(  588): Found field 'thresholds'
+01-22 00:42:54.591 I/ThermalEngine(  588): Found field 'thresholds_clr'
+01-22 00:42:54.591 I/ThermalEngine(  588): Found field 'actions'
+01-22 00:42:54.591 D/ThermalEngine(  588): action:modem_cx
+01-22 00:42:54.591 D/ThermalEngine(  588): action:venus
+01-22 00:42:54.591 D/ThermalEngine(  588): action:mdp
+01-22 00:42:54.591 I/ThermalEngine(  588): Found field 'action_info'
+01-22 00:42:54.591 I/ThermalEngine(  588): Created section 'MODEM_PA_MITIGATION'
+01-22 00:42:54.591 I/ThermalEngine(  588): Algo Type 'monitor'
+01-22 00:42:54.591 I/ThermalEngine(  588): Parsing section MODEM_PA_MITIGATION
+01-22 00:42:54.591 I/ThermalEngine(  588): Found field 'sampling'
+01-22 00:42:54.591 I/ThermalEngine(  588): Found field 'sensor'
+01-22 00:42:54.591 I/ThermalEngine(  588): Found field 'thresholds'
+01-22 00:42:54.591 I/ThermalEngine(  588): Found field 'thresholds_clr'
+01-22 00:42:54.591 I/ThermalEngine(  588): Found field 'actions'
+01-22 00:42:54.591 D/ThermalEngine(  588): action:modem
+01-22 00:42:54.591 D/ThermalEngine(  588): action:modem
+01-22 00:42:54.592 I/ThermalEngine(  588): Found field 'action_info'
+01-22 00:42:54.592 I/ThermalEngine(  588): Created section 'SS-QUIET-THERMAL-S0'
+01-22 00:42:54.592 I/ThermalEngine(  588): Algo Type 'ss'
+01-22 00:42:54.592 I/ThermalEngine(  588): Parsing section SS-QUIET-THERMAL-S0
+01-22 00:42:54.592 I/ThermalEngine(  588): Found field 'sampling'
+01-22 00:42:54.592 I/ThermalEngine(  588): Found field 'sensor'
+01-22 00:42:54.592 I/ThermalEngine(  588): Found field 'device'
+01-22 00:42:54.592 I/ThermalEngine(  588): Found field 'set_point'
+01-22 00:42:54.592 I/ThermalEngine(  588): Found field 'set_point_clr'
+01-22 00:42:54.592 I/ThermalEngine(  588): Found field 'time_constant'
+01-22 00:42:54.592 I/ThermalEngine(  588): Found field 'device_max_limit'
+01-22 00:42:54.592 I/ThermalEngine(  588): Created section 'SS-QUIET-THERMAL-S1'
+01-22 00:42:54.592 I/ThermalEngine(  588): Algo Type 'ss'
+01-22 00:42:54.592 I/ThermalEngine(  588): Parsing section SS-QUIET-THERMAL-S1
+01-22 00:42:54.592 I/ThermalEngine(  588): Found field 'sampling'
+01-22 00:42:54.592 I/ThermalEngine(  588): Found field 'sensor'
+01-22 00:42:54.592 I/ThermalEngine(  588): Found field 'device'
+01-22 00:42:54.592 I/ThermalEngine(  588): Found field 'set_point'
+01-22 00:42:54.592 I/ThermalEngine(  588): Found field 'set_point_clr'
+01-22 00:42:54.592 I/ThermalEngine(  588): Found field 'time_constant'
+01-22 00:42:54.592 I/ThermalEngine(  588): Found field 'device_max_limit'
+01-22 00:42:54.592 I/ThermalEngine(  588): Created section 'MONITOR_QUIET_THERM_HOTPLUG'
+01-22 00:42:54.592 I/ThermalEngine(  588): Algo Type 'monitor'
+01-22 00:42:54.592 I/ThermalEngine(  588): Parsing section MONITOR_QUIET_THERM_HOTPLUG
+01-22 00:42:54.592 I/ThermalEngine(  588): Found field 'sampling'
+01-22 00:42:54.592 I/ThermalEngine(  588): Found field 'sensor'
+01-22 00:42:54.592 I/ThermalEngine(  588): Found field 'thresholds'
+01-22 00:42:54.592 I/ThermalEngine(  588): Found field 'thresholds_clr'
+01-22 00:42:54.592 I/ThermalEngine(  588): Found field 'actions'
+01-22 00:42:54.593 D/ThermalEngine(  588): action:hotplug_2
+01-22 00:42:54.593 D/ThermalEngine(  588): action:hotplug_3
+01-22 00:42:54.593 D/ThermalEngine(  588): action:hotplug_2
+01-22 00:42:54.593 D/ThermalEngine(  588): action:hotplug_3
+01-22 00:42:54.593 I/ThermalEngine(  588): Found field 'action_info'
+01-22 00:42:54.593 E/ThermalEngine(  588): Thermal-Server: Unable to create socket server for thermal clients
+01-22 00:42:54.593 E/ThermalEngine(  588): sensors_manager_reg_clnt: Invalid sensor pop_mem.
+01-22 00:42:54.593 E/ThermalEngine(  588): pid_algo_init: Sensor clnt create fail pop_mem
+01-22 00:42:54.593 I/ThermalEngine(  588): pid_algo_init: No PID's to be configured.
+01-22 00:42:54.593 D/ThermalEngine(  588): thermal_monitor: Import MONITOR_QUIET_THERM_HOTPLUG
+01-22 00:42:54.593 I/ThermalEngine(  588): [MONITOR_QUIET_THERM_HOTPLUG]
+01-22 00:42:54.593 I/ThermalEngine(  588): algo_type monitor
+01-22 00:42:54.593 I/ThermalEngine(  588): sampling 1000
+01-22 00:42:54.593 I/ThermalEngine(  588): sensor quiet-therm-adc
+01-22 00:42:54.593 I/ThermalEngine(  588): thresholds 44000 46000
+01-22 00:42:54.593 I/ThermalEngine(  588): thresholds_clr 42000 44000
+01-22 00:42:54.593 I/ThermalEngine(  588): actions hotplug_2+hotplug_3 hotplug_2+hotplug_3
+01-22 00:42:54.593 I/ThermalEngine(  588): action_info 0+1 1+1
+01-22 00:42:54.593 D/ThermalEngine(  588): thermal_monitor: Import MODEM_PA_MITIGATION
+01-22 00:42:54.593 I/ThermalEngine(  588): [MODEM_PA_MITIGATION]
+01-22 00:42:54.593 I/ThermalEngine(  588): algo_type monitor
+01-22 00:42:54.593 I/ThermalEngine(  588): sampling 1000
+01-22 00:42:54.593 I/ThermalEngine(  588): sensor emmc-therm-adc
+01-22 00:42:54.593 I/ThermalEngine(  588): thresholds 40000 45000
+01-22 00:42:54.593 I/ThermalEngine(  588): thresholds_clr 39000 40000
+01-22 00:42:54.593 I/ThermalEngine(  588): actions modem modem
+01-22 00:42:54.593 I/ThermalEngine(  588): action_info 2 3
+01-22 00:42:54.593 D/ThermalEngine(  588): thermal_monitor: Import CX_MITIGATION_MONITOR
+01-22 00:42:54.593 I/ThermalEngine(  588): [CX_MITIGATION_MONITOR]
+01-22 00:42:54.593 I/ThermalEngine(  588): algo_type monitor
+01-22 00:42:54.593 I/ThermalEngine(  588): sampling 1000
+01-22 00:42:54.593 I/ThermalEngine(  588): sensor emmc-therm-adc
+01-22 00:42:54.594 I/ThermalEngine(  588): thresholds 42000
+01-22 00:42:54.594 I/ThermalEngine(  588): thresholds_clr 40000
+01-22 00:42:54.594 I/ThermalEngine(  588): actions modem_cx+venus+mdp
+01-22 00:42:54.594 I/ThermalEngine(  588): action_info 1+1+1
+01-22 00:42:54.594 D/ThermalEngine(  588): thermal_monitor: Import CPU-MONITOR
+01-22 00:42:54.594 I/ThermalEngine(  588): [CPU-MONITOR]
+01-22 00:42:54.594 I/ThermalEngine(  588): algo_type monitor
+01-22 00:42:54.594 I/ThermalEngine(  588): sampling 1000
+01-22 00:42:54.594 I/ThermalEngine(  588): sensor emmc-therm-adc
+01-22 00:42:54.594 I/ThermalEngine(  588): thresholds 53000
+01-22 00:42:54.594 I/ThermalEngine(  588): thresholds_clr 50000
+01-22 00:42:54.594 I/ThermalEngine(  588): actions shutdown
+01-22 00:42:54.594 I/ThermalEngine(  588): action_info 5000
+01-22 00:42:54.594 D/ThermalEngine(  588): sensors_setup: tm_cnt 4
+01-22 00:42:54.594 D/ThermalEngine(  588): sensors_setup: TM Id MONITOR_QUIET_THERM_HOTPLUG Sensor quiet-therm-adc num_thresholds 2
+01-22 00:42:54.594 D/ThermalEngine(  588): sensors_setup: TM Id MODEM_PA_MITIGATION Sensor emmc-therm-adc num_thresholds 2
+01-22 00:42:54.594 D/ThermalEngine(  588): sensors_setup: TM Id CX_MITIGATION_MONITOR Sensor emmc-therm-adc num_thresholds 1
+01-22 00:42:54.594 D/ThermalEngine(  588): sensors_setup: TM Id CPU-MONITOR Sensor emmc-therm-adc num_thresholds 1
+01-22 00:42:54.594 D/ThermalEngine(  588): devices_manager_set_lvl: DEV kernel, lvl 1
+01-22 00:42:54.594 D/ThermalEngine(  588): ss_algo_init: SS ID SS-QUIET-THERMAL-S1, Sensor quiet-therm-adc
+01-22 00:42:54.594 D/ThermalEngine(  588): ss_algo_init: Device cpu1, Number of Levels 3
+01-22 00:42:54.594 D/ThermalEngine(  588): ss_algo_init: Set Point 45000mC, Set Point Clr 43000mC, Override 0mC
+01-22 00:42:54.594 D/ThermalEngine(  588): ss_algo_init: MAXFREQ 1094400kHz, MINFREQ 0kHz, TC 0
+01-22 00:42:54.594 I/ThermalEngine(  588): [SS-QUIET-THERMAL-S1]
+01-22 00:42:54.594 I/ThermalEngine(  588): algo_type ss
+01-22 00:42:54.594 I/ThermalEngine(  588): sampling 1000
+01-22 00:42:54.594 I/ThermalEngine(  588): sensor quiet-therm-adc
+01-22 00:42:54.594 I/ThermalEngine(  588): device cpu1
+01-22 00:42:54.594 I/ThermalEngine(  588): set_point 45000
+01-22 00:42:54.594 I/ThermalEngine(  588): set_point_clr 43000
+01-22 00:42:54.594 I/ThermalEngine(  588): time_constant 0
+01-22 00:42:54.594 I/ThermalEngine(  588): device_max_limit 800000
+01-22 00:42:54.594 D/ThermalEngine(  588): ss_algo_init: SS ID SS-QUIET-THERMAL-S0, Sensor quiet-therm-adc
+01-22 00:42:54.594 D/ThermalEngine(  588): ss_algo_init: Device cpu0, Number of Levels 3
+01-22 00:42:54.594 D/ThermalEngine(  588): ss_algo_init: Set Point 43000mC, Set Point Clr 41000mC, Override 0mC
+01-22 00:42:54.594 D/ThermalEngine(  588): ss_algo_init: MAXFREQ 1094400kHz, MINFREQ 0kHz, TC 0
+01-22 00:42:54.594 I/ThermalEngine(  588): [SS-QUIET-THERMAL-S0]
+01-22 00:42:54.595 I/ThermalEngine(  588): algo_type ss
+01-22 00:42:54.595 I/ThermalEngine(  588): sampling 1000
+01-22 00:42:54.595 I/ThermalEngine(  588): sensor quiet-therm-adc
+01-22 00:42:54.595 I/ThermalEngine(  588): device cpu0
+01-22 00:42:54.595 I/ThermalEngine(  588): set_point 43000
+01-22 00:42:54.595 I/ThermalEngine(  588): set_point_clr 41000
+01-22 00:42:54.595 I/ThermalEngine(  588): time_constant 0
+01-22 00:42:54.595 I/ThermalEngine(  588): device_max_limit 800000
+01-22 00:42:54.595 E/ThermalEngine(  588): No speaker_cal config
+01-22 00:42:54.595 D/ThermalEngine(  588): device_clnt_cancel_request: DEV kernel
+01-22 00:42:54.599 I/ThermalEngine(  588): Sensor:quiet-therm-adc:-2147483648 mC
+01-22 00:42:54.599 D/ThermalEngine(  588): handle_thresh_sig: SS Id SS-QUIET-THERMAL-S1, Read quiet-therm-adc -2147483648mC
+01-22 00:42:54.599 D/ThermalEngine(  588): device_clnt_cancel_request: DEV cpu1
+01-22 00:42:54.599 D/ThermalEngine(  588): sensors_manager_set_thresh_lvl: quiet-therm-adc Hi(1) 45000, Lo(0) 0, desc:0 Interval(0) 0
+01-22 00:42:54.599 D/ThermalEngine(  588): update_active_thresh: quiet-therm-adc Active(1), Hi(1) 45000, Lo(0) -2147483648, desc(0) Interval(0) -1
+01-22 00:42:54.599 D/ThermalEngine(  588): Setting up thresholds high: 45000
+01-22 00:42:54.599 D/ThermalEngine(  588): writing:45000 in fd:12 bytes:5
+01-22 00:42:54.601 D/ThermalEngine(  588): zone:19 sensor:quiet-therm-adc temp:35989 trip:0 event:0
+01-22 00:42:54.603 D/ThermalEngine(  588): Setting up hysteresis: 0
+01-22 00:42:54.603 D/ThermalEngine(  588): writing:0 in fd:12 bytes:1
+01-22 00:42:54.604 D/ThermalEngine(  588): sensor_monitor: quiet-therm-adc Sensor wait.
+01-22 00:42:54.604 D/ThermalEngine(  588): sensor_monitor: quiet-therm-adc Reading 35989 .
+01-22 00:42:54.604 I/ThermalEngine(  588): Sensor:quiet-therm-adc:35989 mC
+01-22 00:42:54.604 D/ThermalEngine(  588): update_active_thresh: quiet-therm-adc Active(1), Hi(1) 45000, Lo(0) -2147483648, desc(0) Interval(0) -1
+01-22 00:42:54.605 D/ThermalEngine(  588): sensor_monitor: quiet-therm-adc Sensor wait.
+01-22 00:42:54.605 I/ThermalEngine(  588): Sensor:quiet-therm-adc:35989 mC
+01-22 00:42:54.605 D/ThermalEngine(  588): TM Id MONITOR_QUIET_THERM_HOTPLUG Sensor quiet-therm-adc Reading 35989
+01-22 00:42:54.605 D/ThermalEngine(  588): handle_thresh_sig: TM Id MONITOR_QUIET_THERM_HOTPLUG Sensor quiet-therm-adc Temp 35989
+01-22 00:42:54.605 D/ThermalEngine(  588): sensor_update_thresholds: TM Id MONITOR_QUIET_THERM_HOTPLUG Sensor quiet-therm-adc threshold_type 0, level 0
+01-22 00:42:54.605 D/ThermalEngine(  588): sensors_manager_set_thresh_lvl: quiet-therm-adc Hi(1) 44000, Lo(0) 42000, desc:0 Interval(1) 1000
+01-22 00:42:54.605 D/ThermalEngine(  588): update_active_thresh: quiet-therm-adc Active(1), Hi(1) 44000, Lo(0) -2147483648, desc(0) Interval(1) 1000
+01-22 00:42:54.605 D/ThermalEngine(  588): Setting up thresholds high: 44000
+01-22 00:42:54.605 D/ThermalEngine(  588): writing:44000 in fd:12 bytes:5
+01-22 00:42:54.609 D/ThermalEngine(  588): zone:19 sensor:quiet-therm-adc temp:35989 trip:0 event:0
+01-22 00:42:54.610 D/ThermalEngine(  588): sensor_monitor: quiet-therm-adc Reading 35989 .
+01-22 00:42:54.610 I/ThermalEngine(  588): Sensor:quiet-therm-adc:35989 mC
+01-22 00:42:54.610 I/ThermalEngine(  588): Sensor:emmc-therm-adc:-2147483648 mC
+01-22 00:42:54.610 D/ThermalEngine(  588): TM Id MODEM_PA_MITIGATION Sensor emmc-therm-adc Reading -2147483648
+01-22 00:42:54.610 D/ThermalEngine(  588): handle_thresh_sig: TM Id MODEM_PA_MITIGATION Sensor emmc-therm-adc Temp -2147483648
+01-22 00:42:54.610 D/ThermalEngine(  588): sensor_update_thresholds: TM Id MODEM_PA_MITIGATION Sensor emmc-therm-adc threshold_type 0, level 0
+01-22 00:42:54.610 D/ThermalEngine(  588): sensors_manager_set_thresh_lvl: emmc-therm-adc Hi(1) 40000, Lo(0) 39000, desc:0 Interval(1) 1000
+01-22 00:42:54.610 D/ThermalEngine(  588): update_active_thresh: emmc-therm-adc Active(1), Hi(1) 40000, Lo(0) -2147483648, desc(0) Interval(1) 1000
+01-22 00:42:54.610 D/ThermalEngine(  588): Setting up thresholds high: 40000
+01-22 00:42:54.611 D/ThermalEngine(  588): writing:40000 in fd:12 bytes:5
+01-22 00:42:54.612 D/ThermalEngine(  588): zone:17 sensor:emmc-therm-adc temp:33284 trip:0 event:0
+01-22 00:42:54.612 D/ThermalEngine(  588): Setting up hysteresis: 0
+01-22 00:42:54.613 D/ThermalEngine(  588): writing:0 in fd:12 bytes:1
+01-22 00:42:54.613 D/ThermalEngine(  588): sensor_monitor: emmc-therm-adc Sensor wait.
+01-22 00:42:54.613 D/ThermalEngine(  588): sensor_monitor: emmc-therm-adc Reading 33284 .
+01-22 00:42:54.613 I/ThermalEngine(  588): Sensor:emmc-therm-adc:33284 mC
+01-22 00:42:54.614 D/ThermalEngine(  588): update_active_thresh: quiet-therm-adc Active(1), Hi(1) 44000, Lo(0) -2147483648, desc(0) Interval(1) 1000
+01-22 00:42:54.614 D/ThermalEngine(  588): sensor_monitor: quiet-therm-adc Sensor wait.
+01-22 00:42:54.614 I/ThermalEngine(  588): Sensor:emmc-therm-adc:33284 mC
+01-22 00:42:54.614 D/ThermalEngine(  588): TM Id CX_MITIGATION_MONITOR Sensor emmc-therm-adc Reading 33284
+01-22 00:42:54.614 D/ThermalEngine(  588): handle_thresh_sig: TM Id CX_MITIGATION_MONITOR Sensor emmc-therm-adc Temp 33284
+01-22 00:42:54.614 D/ThermalEngine(  588): sensor_update_thresholds: TM Id CX_MITIGATION_MONITOR Sensor emmc-therm-adc threshold_type 0, level 0
+01-22 00:42:54.614 D/ThermalEngine(  588): sensors_manager_set_thresh_lvl: emmc-therm-adc Hi(1) 42000, Lo(0) 40000, desc:0 Interval(1) 1000
+01-22 00:42:54.614 D/ThermalEngine(  588): update_active_thresh: emmc-therm-adc Active(1), Hi(1) 40000, Lo(0) -2147483648, desc(0) Interval(1) 1000
+01-22 00:42:54.614 I/ThermalEngine(  588): Sensor:emmc-therm-adc:33284 mC
+01-22 00:42:54.614 D/ThermalEngine(  588): TM Id CPU-MONITOR Sensor emmc-therm-adc Reading 33284
+01-22 00:42:54.614 D/ThermalEngine(  588): handle_thresh_sig: TM Id CPU-MONITOR Sensor emmc-therm-adc Temp 33284
+01-22 00:42:54.614 D/ThermalEngine(  588): sensor_update_thresholds: TM Id CPU-MONITOR Sensor emmc-therm-adc threshold_type 0, level 0
+01-22 00:42:54.614 D/ThermalEngine(  588): sensors_manager_set_thresh_lvl: emmc-therm-adc Hi(1) 53000, Lo(0) 50000, desc:0 Interval(1) 1000
+01-22 00:42:54.614 D/ThermalEngine(  588): update_active_thresh: emmc-therm-adc Active(1), Hi(1) 40000, Lo(0) -2147483648, desc(0) Interval(1) 1000
+01-22 00:42:54.615 D/ThermalEngine(  588): device_clnt_cancel_request: DEV kernel
+01-22 00:42:54.615 E/ThermalEngine(  588): open/sys/module/msm_thermal/parameters/enabled failed2
+01-22 00:42:54.615 D/ThermalEngine(  588): KERNEL mitigation disabled
+01-22 00:42:54.615 D/ThermalEngine(  588): sensor_monitor: Wait for EV
+01-22 00:42:54.615 D/ThermalEngine(  588): update_active_thresh: emmc-therm-adc Active(1), Hi(1) 40000, Lo(0) -2147483648, desc(0) Interval(1) 1000
+01-22 00:42:54.615 D/ThermalEngine(  588): sensor_monitor: emmc-therm-adc Sensor wait.
+01-22 00:42:54.616 I/ThermalEngine(  588): Sensor:quiet-therm-adc:35989 mC
+01-22 00:42:54.616 D/ThermalEngine(  588): handle_thresh_sig: SS Id SS-QUIET-THERMAL-S0, Read quiet-therm-adc 35989mC
+01-22 00:42:54.616 D/ThermalEngine(  588): device_clnt_cancel_request: DEV cpu0
+01-22 00:42:54.616 D/ThermalEngine(  588): sensors_manager_set_thresh_lvl: quiet-therm-adc Hi(1) 43000, Lo(0) 0, desc:0 Interval(0) 0
+01-22 00:42:54.616 D/ThermalEngine(  588): update_active_thresh: quiet-therm-adc Active(1), Hi(1) 43000, Lo(0) -2147483648, desc(0) Interval(1) 1000
+01-22 00:42:54.616 D/ThermalEngine(  588): Setting up thresholds high: 43000
+01-22 00:42:54.616 D/ThermalEngine(  588): writing:43000 in fd:12 bytes:5
+01-22 00:42:54.617 D/ThermalEngine(  588): zone:19 sensor:quiet-therm-adc temp:35989 trip:0 event:0
+01-22 00:42:54.618 D/ThermalEngine(  588): sensor_monitor: quiet-therm-adc Reading 35989 .
+01-22 00:42:54.618 I/ThermalEngine(  588): Sensor:quiet-therm-adc:35989 mC
+01-22 00:42:54.618 D/ThermalEngine(  588): update_active_thresh: quiet-therm-adc Active(1), Hi(1) 43000, Lo(0) -2147483648, desc(0) Interval(1) 1000
+01-22 00:42:54.619 D/ThermalEngine(  588): sensor_monitor: quiet-therm-adc Sensor wait.
+01-22 00:42:54.619 D/ThermalEngine(  588): algo_monitor: Wait for EV
+11-25 09:45:01.752 D/ThermalEngine(  588): zone:19 sensor:quiet-therm-adc temp:40058 trip:0 event:0
+11-25 09:45:01.773 D/ThermalEngine(  588): sensor_monitor: quiet-therm-adc Reading 40058 .
+11-25 09:45:01.773 I/ThermalEngine(  588): Sensor:quiet-therm-adc:40058 mC
+11-25 09:45:01.773 D/ThermalEngine(  588): update_active_thresh: quiet-therm-adc Active(1), Hi(1) 43000, Lo(0) -2147483648, desc(0) Interval(1) 1000
+11-25 09:45:01.775 D/ThermalEngine(  588): sensor_monitor: quiet-therm-adc Sensor wait.
+11-25 09:45:13.447 D/ThermalEngine(  588): zone:19 sensor:quiet-therm-adc temp:40000 trip:0 event:0
+11-25 09:45:13.449 D/ThermalEngine(  588): sensor_monitor: quiet-therm-adc Reading 40000 .
+11-25 09:45:13.449 I/ThermalEngine(  588): Sensor:quiet-therm-adc:40000 mC
+11-25 09:45:13.449 D/ThermalEngine(  588): update_active_thresh: quiet-therm-adc Active(1), Hi(1) 43000, Lo(0) -2147483648, desc(0) Interval(1) 1000
+11-25 09:45:13.450 D/ThermalEngine(  588): sensor_monitor: quiet-therm-adc Sensor wait.
