@@ -142,3 +142,7 @@ adb shell cat /sys/devices/virtual/thermal/thermal_*/temp
 ```
 
 原文链接：https://blog.csdn.net/shichaog/article/details/60959260
+
+configuration:
+
+https://blog.csdn.net/finewind/article/details/47016683
