@@ -1,0 +1,77 @@
+digraph G {
+  subgraph cluster0 {
+    node [style=filled,color=white];
+    style=filled;
+    color=lightgrey;
+    label = "PMS";
+
+    a0[label="PackageManagerService.performDexOptInternal"]
+    a1[label="PackageManagerService.performDexOptInternalWithDependenciesLI"]
+    a2[label="PackageDexOptimizer.performDexOpt"]
+    a3[label="PackageDexOptimizer.performDexOptLI"]
+    a4[label="PackageDexOptimizer.dexOptPath"]
+    a5[label="mInstaller.dexopt"]
+
+    a0->a1->a2->a3->a4->a5;
+  }
+
+  subgraph cluster1 {
+    node [style=filled];
+    label = "installd";
+    color=blue;
+
+    c0[label="dexopt"]
+    c1[label="run_dex2oat"]
+
+    c0->c1;
+  }
+
+  subgraph cluster2 {
+    node [style=filled];
+    label = "dex2oat";
+    color=blue;
+
+    b0[label="main"]
+    b1[label="art::Dex2oat(argc, argv)"]
+    b2[label="dex2oat::OpenFile"]
+
+    b3[label="dex2oat::Setup"]
+    b31[label="dex2oat::CreateOatWriters"]
+    b32[label="dex2oat::CreateElfWriterQuick"]
+    b33[label="new dex2oat::linker::OatWriter"]
+
+    b3->b31->b32->b33;
+
+    b34[label="OatWriter::WriteAndOpenDexFiles"]
+    b35[label="InitOatHeader"]
+    b36[label="WriteDexFiles"]
+    b37[label="WriteTypeLookupTables"]
+    b38[label="WriteDexLayoutSections"]
+
+    b33->b34->b35->b36->b37->b38;
+
+    b4[label="dex2oat::IsImage"]
+
+    b0->b1->b2->b3->b4;
+
+    b5[label="dex2oat::CompileImage"]
+    b6[label="dex2oat::CompileApp"]
+
+    b4->b5[label="true"];
+    b4->b6[label="false"];
+
+    b7[label="dex2oat::Compile"]
+
+    b5->b7;
+    b6->b7;
+  }
+
+  start->a0;
+
+  a5->c0;
+  c1->b0;
+  b7->end;
+
+  start [shape=Mdiamond];
+  end [shape=Msquare];
+}
