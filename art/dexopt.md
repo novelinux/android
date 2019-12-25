@@ -21,7 +21,6 @@ total 43M
 
 ```
 whyred:/proc/15696 # cat maps | grep base.vdex
-76e99000-76ea1000 r--s 00000000 fc:00 1248                               /system/framework/boot-android.test.base.vdex
 d210c000-d63ee000 r--s 00000000 fc:02 1705210                            /data/app/com.ss.android.ugc.aweme-ZmOCKX8MRb9xcFJYl-abMg==/oat/arm/base.vdex
 ```
 

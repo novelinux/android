@@ -1,0 +1,59 @@
+## dex2oat
+
+```
+12-24 17:48:19.590  8555  8555 I dex2oat : /system/bin/dex2oat --input-vdex-fd=-1 --output-vdex-fd=20 --compiler-filter=quicken -j6 --classpath-dir=/data/app/com.ss.android.ugc.aweme-ZgFDboAF0nTs1aOAUv9vUw== --class-loader-context=PCL[/system/framework/org.apache.http.legacy.boot.jar] --generate-mini-debug-info --compact-dex-level=none --compilation-reason=install
+12-24 17:48:23.303  8555  8555 I dex2oat : Large app, accepted running with swap.
+12-24 17:48:24.579  8555  8555 I dex2oat : Explicit concurrent copying GC freed 43384(7MB) AllocSpace objects, 0(0B) LOS objects, 96% free, 58KB/1594KB, paused 89us total 63.109ms
+12-24 17:48:25.253  8555  8570 W dex2oat : Accessing hidden method Landroid/view/ViewRootImpl$ActivityConfigCallback;->onConfigurationChanged(Landroid/content/res/Configuration;I)V (dark greylist, linking)
+12-24 17:48:25.730  8555  8555 I dex2oat : Explicit concurrent copying GC freed 64188(11MB) AllocSpace objects, 0(0B) LOS objects, 94% free, 92KB/1628KB, paused 65us total 66.465ms
+12-24 17:48:26.532  8555  8555 I dex2oat : Explicit concurrent copying GC freed 36426(5MB) AllocSpace objects, 0(0B) LOS objects, 92% free, 123KB/1659KB, paused 71us total 26.822ms
+12-24 17:48:27.847  8555  8555 I dex2oat : Explicit concurrent copying GC freed 72701(12MB) AllocSpace objects, 0(0B) LOS objects, 91% free, 141KB/1677KB, paused 71us total 74.644ms
+12-24 17:48:29.020  8555  8555 I dex2oat : Explicit concurrent copying GC freed 67929(11MB) AllocSpace objects, 0(0B) LOS objects, 91% free, 150KB/1686KB, paused 70us total 66.086ms
+12-24 17:48:30.324  8555  8555 I dex2oat : Explicit concurrent copying GC freed 72518(12MB) AllocSpace objects, 0(0B) LOS objects, 90% free, 154KB/1690KB, paused 71us total 75.161ms
+12-24 17:48:31.194  8555  8555 I dex2oat : Explicit concurrent copying GC freed 47824(6MB) AllocSpace objects, 0(0B) LOS objects, 90% free, 164KB/1700KB, paused 67us total 28.737ms
+12-24 17:48:31.448  8555  8555 I dex2oat : Explicit concurrent copying GC freed 16508(2MB) AllocSpace objects, 0(0B) LOS objects, 90% free, 166KB/1702KB, paused 70us total 15.885ms
+12-24 17:48:32.249  8555  8555 I dex2oat : dex2oat took 12.661s (34.862s cpu) (threads: 6) arena alloc=8MB (9291320B) java alloc=166KB (170856B) native alloc=31MB (32697464B) free=7MB (7934856B) swap=32MB (33554432B)
+12-24 17:48:58.846  8755  8755 I dex2oat : The ClassLoaderContext is a special shared library.
+12-24 17:48:58.847  8755  8755 I dex2oat : /system/bin/dex2oat -j6 --dex-file=/data/user/0/com.ss.android.ugc.aweme/files/plugins/com.bytedance.aweme.f.two/version-92001/apk/base-1.apk --output-vdex-fd=55 --oat-fd=66 --oat-location=/data/user/0/com.ss.android.ugc.aweme/files/plugins/com.bytedance.aweme.f.two/version-92001/apk/oat/arm/base-1.odex --compiler-filter=quicken --class-loader-context=&
+12-24 17:48:59.793  8755  8755 I dex2oat : dex2oat took 948.418ms (1.827s cpu) (threads: 6) arena alloc=83KB (85296B) java alloc=1401KB (1435432B) native alloc=3MB (3982248B) free=3MB (3751000B)
+12-24 17:49:06.325  9270  9270 I dex2oat : The ClassLoaderContext is a special shared library.
+12-24 17:49:06.326  9270  9270 I dex2oat : /system/bin/dex2oat -j6 --dex-file=/data/user/0/com.ss.android.ugc.aweme/cache/robust/bdc547d74a1a35899407511f0d22ad0a_temp.jar --output-vdex-fd=352 --oat-fd=354 --oat-location=/data/user/0/com.ss.android.ugc.aweme/cache/robust/oat/arm/bdc547d74a1a35899407511f0d22ad0a_temp.odex --compiler-filter=quicken --class-loader-context=&
+12-24 17:49:06.512  9270  9270 I dex2oat : dex2oat took 188.207ms (70.566ms cpu) (threads: 6) arena alloc=71KB (72912B) java alloc=48KB (49168B) native alloc=981KB (1004992B) free=2MB (2665024B)
+12-24 17:49:06.847  9300  9300 I dex2oat : The ClassLoaderContext is a special shared library.
+12-24 17:49:06.847  9300  9300 I dex2oat : /system/bin/dex2oat -j6 --dex-file=/data/user/0/com.ss.android.ugc.aweme/files/plugins/com.ss.android.ugc.aweme.videocache_v2/version-1021/apk/base-1.apk --output-vdex-fd=363 --oat-fd=367 --oat-location=/data/user/0/com.ss.android.ugc.aweme/files/plugins/com.ss.android.ugc.aweme.videocache_v2/version-1021/apk/oat/arm/base-1.odex --compiler-filter=quicken --class-loader-context=&
+12-24 17:49:07.268  9315  9315 I dex2oat : The ClassLoaderContext is a special shared library.
+12-24 17:49:07.269  9315  9315 I dex2oat : /system/bin/dex2oat -j6 --dex-file=/data/user/0/com.ss.android.ugc.aweme/cache/robust/d1d4d819874ebd81e4ef4e122eaab427_temp.jar --output-vdex-fd=326 --oat-fd=329 --oat-location=/data/user/0/com.ss.android.ugc.aweme/cache/robust/oat/arm/d1d4d819874ebd81e4ef4e122eaab427_temp.odex --compiler-filter=quicken --class-loader-context=&
+12-24 17:49:07.412  9315  9315 I dex2oat : dex2oat took 145.405ms (55.165ms cpu) (threads: 6) arena alloc=5KB (5600B) java alloc=32KB (32784B) native alloc=1015KB (1039552B) free=2MB (2106176B)
+12-24 17:49:07.433  9300  9300 I dex2oat : dex2oat took 588.006ms (561.558ms cpu) (threads: 6) arena alloc=3KB (4032B) java alloc=307KB (314592B) native alloc=1910KB (1955880B) free=2MB (2893784B)
+12-24 17:49:07.687  9339  9339 I dex2oat : The ClassLoaderContext is a special shared library.
+12-24 17:49:07.691  9339  9339 I dex2oat : /system/bin/dex2oat -j6 --dex-file=/data/user/0/com.ss.android.ugc.aweme/files/plugins/com.ss.android.ugc.aweme.miniapp/version-92004/apk/base-1.apk --output-vdex-fd=388 --oat-fd=389 --oat-location=/data/user/0/com.ss.android.ugc.aweme/files/plugins/com.ss.android.ugc.aweme.miniapp/version-92004/apk/oat/arm/base-1.odex --compiler-filter=quicken --class-loader-context=&
+12-24 17:49:08.355  9338  9338 I dex2oat : /system/bin/dex2oat --input-vdex-fd=20 --output-vdex-fd=21 --compiler-filter=everything-profile -j6 --profile-file-fd=24 --classpath-dir=/data/app/com.ss.android.ugc.aweme-ZgFDboAF0nTs1aOAUv9vUw== --class-loader-context=PCL[/system/framework/org.apache.http.legacy.boot.jar] --generate-mini-debug-info --compilation-reason=unknown
+12-24 17:49:08.458  9356  9356 I dex2oat : The ClassLoaderContext is a special shared library.
+12-24 17:49:08.458  9356  9356 I dex2oat : /system/bin/dex2oat -j6 --dex-file=/data/user/0/com.ss.android.ugc.aweme/files/plugins/com.bytedance.aweme.f.two/version-92002/apk/base-1.apk --output-vdex-fd=440 --oat-fd=441 --oat-location=/data/user/0/com.ss.android.ugc.aweme/files/plugins/com.bytedance.aweme.f.two/version-92002/apk/oat/arm/base-1.odex --compiler-filter=quicken --class-loader-context=&
+12-24 17:49:09.557  9356  9364 W dex2oat : Verification of void com.ixigua.feature.fantasy.feature.lottery.LotteryResultNegativeView.a(android.view.ViewGroup) took 102.246ms
+12-24 17:49:09.971  9356  9356 I dex2oat : dex2oat took 1.516s (1.860s cpu) (threads: 6) arena alloc=85KB (87576B) java alloc=1395KB (1429192B) native alloc=3MB (3981136B) free=2MB (2703536B)
+12-24 17:49:10.695  9339  9339 I dex2oat : dex2oat took 3.009s (4.009s cpu) (threads: 6) arena alloc=7KB (8088B) java alloc=3MB (3698080B) native alloc=7MB (7795712B) free=2MB (2690048B)
+12-24 17:49:24.822  9338  9470 W dex2oat : Accessing hidden method Landroid/view/ViewRootImpl$ActivityConfigCallback;->onConfigurationChanged(Landroid/content/res/Configuration;I)V (dark greylist, linking)
+12-24 17:49:31.572  9338  9467 W dex2oat : Compilation of android.view.View com.by.a.q.a(android.content.Context, android.view.ViewGroup, boolean) took 107.652ms
+12-24 17:49:31.937  9338  9469 W dex2oat : Compilation of android.view.View com.by.a.r.a(android.content.Context, android.view.ViewGroup, boolean) took 467.139ms
+12-24 17:49:38.485  9338  9338 W dex2oat : Accessing hidden method Landroid/view/ViewRootImpl$ActivityConfigCallback;->onConfigurationChanged(Landroid/content/res/Configuration;I)V (dark greylist, linking)
+12-24 17:49:40.442  9338  9338 I dex2oat : Explicit concurrent copying GC freed 364732(50MB) AllocSpace objects, 0(0B) LOS objects, 67% free, 2MB/8MB, paused 104us total 60.651ms
+12-24 17:49:45.386  9338  9338 I dex2oat : dex2oat took 37.714s (75.032s cpu) (threads: 6) arena alloc=17MB (18356848B) java alloc=2MB (3067352B) native alloc=103MB (108351728B) free=9MB (9482000B)
+12-24 17:49:46.274  9566  9566 I dex2oat : /system/bin/dex2oat --input-vdex-fd=20 --output-vdex-fd=21 --compiler-filter=speed-profile -j6 --profile-file-fd=24 --classpath-dir=/data/app/com.ss.android.ugc.aweme-ZgFDboAF0nTs1aOAUv9vUw== --class-loader-context=PCL[/system/framework/org.apache.http.legacy.boot.jar] --generate-mini-debug-info --compilation-reason=unknown
+12-24 17:49:59.605  9566  9636 W dex2oat : Accessing hidden method Landroid/view/ViewRootImpl$ActivityConfigCallback;->onConfigurationChanged(Landroid/content/res/Configuration;I)V (dark greylist, linking)
+12-24 17:50:06.070  9566  9634 W dex2oat : Compilation of android.view.View com.by.a.q.a(android.content.Context, android.view.ViewGroup, boolean) took 114.891ms
+12-24 17:50:06.362  9566  9635 W dex2oat : Compilation of android.view.View com.by.a.r.a(android.content.Context, android.view.ViewGroup, boolean) took 406.317ms
+12-24 17:50:08.365  9566  9566 W dex2oat : Compilation of void com.ss.android.ugc.aweme.global.config.settings.pojo.IESSettings$ProtoAdapter_IESSettings.encode(com.squareup.wire.ProtoWriter, com.ss.android.ugc.aweme.global.config.settings.pojo.IESSettings) took 103.404ms
+12-24 17:50:13.068  9566  9566 W dex2oat : Accessing hidden method Landroid/view/ViewRootImpl$ActivityConfigCallback;->onConfigurationChanged(Landroid/content/res/Configuration;I)V (dark greylist, linking)
+12-24 17:50:15.186  9566  9566 I dex2oat : Explicit concurrent copying GC freed 365547(50MB) AllocSpace objects, 0(0B) LOS objects, 67% free, 2MB/8MB, paused 110us total 63.884ms
+12-24 17:50:20.752  9566  9566 I dex2oat : dex2oat took 34.977s (75.299s cpu) (threads: 6) arena alloc=17MB (18040416B) java alloc=2MB (3098808B) native alloc=103MB (109045528B) free=10MB (10885352B)
+12-24 17:50:21.666  9691  9691 I dex2oat : /system/bin/dex2oat --input-vdex-fd=20 --output-vdex-fd=21 --compiler-filter=everything-profile -j6 --profile-file-fd=24 --classpath-dir=/data/app/com.ss.android.ugc.aweme-ZgFDboAF0nTs1aOAUv9vUw== --class-loader-context=PCL[/system/framework/org.apache.http.legacy.boot.jar] --generate-mini-debug-info --compilation-reason=unknown
+12-24 17:50:21.668  9691  9691 W dex2oat : Could not reserve sentinel fault page
+12-24 17:50:35.283  9691  9704 W dex2oat : Accessing hidden method Landroid/view/ViewRootImpl$ActivityConfigCallback;->onConfigurationChanged(Landroid/content/res/Configuration;I)V (dark greylist, linking)
+12-24 17:50:41.381  9691  9691 W dex2oat : Compilation of android.view.View com.by.a.r.a(android.content.Context, android.view.ViewGroup, boolean) took 205.950ms
+12-24 17:50:43.144  9691  9704 W dex2oat : Compilation of void com.ss.android.ugc.aweme.global.config.settings.pojo.IESSettings$ProtoAdapter_IESSettings.encode(com.squareup.wire.ProtoWriter, com.ss.android.ugc.aweme.global.config.settings.pojo.IESSettings) took 142.715ms
+12-24 17:50:47.673  9691  9691 W dex2oat : Accessing hidden method Landroid/view/ViewRootImpl$ActivityConfigCallback;->onConfigurationChanged(Landroid/content/res/Configuration;I)V (dark greylist, linking)
+12-24 17:50:49.771  9691  9691 I dex2oat : Explicit concurrent copying GC freed 365559(50MB) AllocSpace objects, 0(0B) LOS objects, 67% free, 2MB/8MB, paused 100us total 63.780ms
+12-24 17:50:55.116  9691  9691 I dex2oat : dex2oat took 33.995s (73.712s cpu) (threads: 6) arena alloc=18MB (19710976B) java alloc=2MB (3098808B) native alloc=103MB (109046552B) free=9MB (10360040B)
+
+```
