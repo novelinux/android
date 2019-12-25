@@ -1,0 +1,66 @@
+```
+Cmdline: /data/local/tmp/simpleperf record -o /data/local/tmp/perf.data -e task-clock:u -f 1000 -g --duration 10 --symfs /data/local/tmp/native_libs/ --app com.ss.android.ugc.aweme
+Arch: arm64
+Event: task-clock:u (type 1, config 1)
+Samples: 10681
+Event count: 10681000000
+
+Overhead  Command                   Pid    Tid    Shared Object                                                                          Symbol
+1.05%     HeapTaskDaemon            23230  23242  /system/lib/libart.so                                                                  void art::mirror::Object::VisitReferences<true, (art::VerifyObjectFlags)0, (art::ReadBarrierOption)1, art::gc::collector::ConcurrentCopying::RefFieldsVisitor, art::gc::collector::ConcurrentCopying::RefFieldsVisitor>(art::gc::collector::ConcurrentCopying::RefFieldsVisitor const&, art::gc::collector::ConcurrentCopying::RefFieldsVisitor const&)
+0.90%     HeapTaskDaemon            23230  23242  /system/lib/libart.so                                                                  art::gc::collector::ConcurrentCopying::Process(art::mirror::Object*, art::MemberOffset)
+0.71%     audio outer               23230  23670  /system/lib/libm.so                                                                    powf
+0.63%     RenderThread              23230  23457  /system/lib/libhwui.so                                                                 android::uirenderer::RenderNode::prepareTreeImpl(android::uirenderer::TreeObserver&, android::uirenderer::TreeInfo&, bool)
+0.36%     audio outer               23230  23670  /data/app/com.ss.android.ugc.aweme-ZgFDboAF0nTs1aOAUv9vUw==/lib/arm/libaudioeffect.so  mammon::sf_compressor_process_stereo(mammon::sf_compressor_state_st*, int, float*, float*, float*, float*)
+0.32%     HeapTaskDaemon            23230  23242  /system/lib/libart.so                                                                  void art::gc::collector::ConcurrentCopying::MarkRoot<false>(art::mirror::CompressedReference<art::mirror::Object>*)
+0.30%     com.ss.android.ugc.aweme  23230  23230  /system/lib/libdexfile.so                                                              art::ComputeModifiedUtf8Hash(char const*)
+0.29%     RenderThread              23230  23457  /system/lib/libhwui.so                                                                 android::uirenderer::Matrix4::load(SkMatrix const&)
+0.27%     com.ss.android.ugc.aweme  23230  23230  /system/lib/libart.so                                                                  art::OatDexFile::FindClassDef(art::DexFile const&, char const*, unsigned int)
+0.26%     .10.25.16-IH-Do           23230  23350  /data/app/com.ss.android.ugc.aweme-ZgFDboAF0nTs1aOAUv9vUw==/lib/arm/libcms.so          libcms.so[+b7cc]
+0.25%     com.ss.android.ugc.aweme  23230  23230  /system/lib/libart.so                                                                  art::CodeInfoEncoding::CodeInfoEncoding(void const*)
+0.23%     RenderThread              23230  23457  /system/lib/libhwui.so                                                                 SkDrawable::draw(SkCanvas*, SkMatrix const*)
+0.23%     audio outer               23230  23670  /system/lib/libm.so                                                                    log10f
+0.23%     com.ss.android.ugc.aweme  23230  23230  /system/lib/libart.so                                                                  art::CodeInfo::GetStackMapForNativePcOffset(unsigned int, art::CodeInfoEncoding const&) const
+0.23%     com.ss.android.ugc.aweme  23230  23230  /system/lib/libart.so                                                                  bool art::interpreter::DoCall<false, false>(art::ArtMethod*, art::Thread*, art::ShadowFrame&, art::Instruction const*, unsigned short, art::JValue*)
+0.23%     com.ss.android.ugc.aweme  23230  23230  /system/lib/libc.so                                                                    je_malloc
+0.22%     com.ss.android.ugc.aweme  23230  23230  /system/lib/libc.so                                                                    ifree
+0.22%     RenderThread              23230  23457  /system/lib/libc.so                                                                    ifree
+0.21%     .10.25.16-IH-Do           23230  23350  /data/app/com.ss.android.ugc.aweme-ZgFDboAF0nTs1aOAUv9vUw==/lib/arm/libcms.so          libcms.so[+7f616]
+0.21%     RenderThread              23230  23457  /system/lib/libhwui.so                                                                 android::uirenderer::skiapipeline::RenderNodeDrawable::forceDraw(SkCanvas*)
+0.20%     .10.25.16-IH-Do           23230  23350  /data/app/com.ss.android.ugc.aweme-ZgFDboAF0nTs1aOAUv9vUw==/lib/arm/libcms.so          libcms.so[+7f618]
+0.19%     LegoHandler               23230  23260  /system/lib/libdexfile.so                                                              art::ComputeModifiedUtf8Hash(char const*)
+0.19%     LegoHandler               23230  23260  /system/lib/libhwui.so                                                                 WebPRescalerImportRowShrink_C
+0.19%     com.ss.android.ugc.aweme  23230  23230  /system/framework/arm/boot-framework.oat                                               android.view.ViewGroup.dispatchGetDisplayList
+0.18%     com.ss.android.ugc.aweme  23230  23230  /system/lib/libart.so                                                                  artMterpAsmInstructionStart
+0.18%     com.ss.android.ugc.aweme  23230  23230  /system/lib/libc.so                                                                    init_macro
+0.18%     tp-io-1                   23230  23267  /system/lib/libart.so                                                                  art::ReadBarrier::Mark(art::mirror::Object*)
+0.17%     .10.25.16-IH-Do           23230  23350  /data/app/com.ss.android.ugc.aweme-ZgFDboAF0nTs1aOAUv9vUw==/lib/arm/libcms.so          libcms.so[+7f710]
+0.17%     HeapTaskDaemon            23230  23242  /system/lib/libart.so                                                                  art::gc::collector::ConcurrentCopying::PushOntoMarkStack(art::mirror::Object*)
+0.17%     com.ss.android.ugc.aweme  23230  23230  /system/lib/libart.so                                                                  art::ArtMethod::Invoke(art::Thread*, unsigned int*, unsigned int, art::JValue*, char const*)
+0.16%     Jit thread pool           23230  23236  /system/lib/libart-compiler.so                                                         art::GlobalValueNumberer::VisitBasicBlock(art::HBasicBlock*)
+0.16%     RenderThread              23230  23457  /system/lib/libhwui.so                                                                 android::uirenderer::skiapipeline::RenderNodeDrawable::drawContent(SkCanvas*) const
+0.16%     com.ss.android.ugc.aweme  23230  23230  /system/framework/arm/boot-framework.oat                                               android.view.ViewGroup.onDescendantInvalidated
+0.15%     RenderThread              23230  23457  /system/lib/libhwui.so                                                                 @plt
+0.14%     Jit thread pool           23230  23236  /system/lib/libart-compiler.so                                                         art::HInstructionBuilder::InitializeInstruction(art::HInstruction*)
+0.14%     RenderThread              23230  23457  /system/lib/libhwui.so                                                                 SkLiteDL::draw(SkCanvas*) const
+0.14%     RenderThread              23230  23457  /vendor/lib/egl/libGLESv2_adreno.so                                                    A5xContext::ValidateState(EsxDrawDescriptor const*)
+0.14%     com.ss.android.ugc.aweme  23230  23230  /system/lib/libart.so                                                                  MterpInvokeInterface
+0.14%     tp-io-1                   23230  23267  /system/lib/libart.so                                                                  bool art::interpreter::DoCall<false, false>(art::ArtMethod*, art::Thread*, art::ShadowFrame&, art::Instruction const*, unsigned short, art::JValue*)
+0.13%     .10.25.16-IH-Do           23230  23350  /data/app/com.ss.android.ugc.aweme-ZgFDboAF0nTs1aOAUv9vUw==/lib/arm/libcms.so          libcms.so[+7f712]
+0.13%     RenderThread              23230  23457  /system/lib/libc.so                                                                    __memcpy_base
+0.13%     RenderThread              23230  23457  /system/lib/libhwui.so                                                                 android::uirenderer::AnimatorManager::pushStaging()
+0.13%     com.ss.android.ugc.aweme  23230  23230  /system/lib/libart.so                                                                  MterpInvokeVirtualQuick
+0.13%     com.ss.android.ugc.aweme  23230  23230  /system/lib/libart.so                                                                  art::Thread::DecodeJObject(_jobject*) const
+0.13%     com.ss.android.ugc.aweme  23230  23230  /system/lib/libart.so                                                                  void art::StackVisitor::WalkStack<(art::StackVisitor::CountTransitions)0>(bool)
+0.13%     com.ss.android.ugc.aweme  23230  23230  /system/lib/libz.so                                                                    inflate_fast
+0.12%     .10.25.16-IH-Do           23230  23350  /data/app/com.ss.android.ugc.aweme-ZgFDboAF0nTs1aOAUv9vUw==/lib/arm/libcms.so          libcms.so[+7f78c]
+0.12%     HeapTaskDaemon            23230  23242  /system/lib/libart.so                                                                  art::gc::collector::ConcurrentCopying::Copy(art::mirror::Object*, art::mirror::Object*, art::MemberOffset)
+0.12%     HeapTaskDaemon            23230  23242  /system/lib/libart.so                                                                  art::gc::collector::ConcurrentCopying::ProcessMarkStackRef(art::mirror::Object*)
+0.12%     Jit thread pool           23230  23236  /system/lib/libart-compiler.so                                                         art::ReferenceTypePropagation::Run()
+0.12%     Jit thread pool           23230  23236  /system/lib/libart-compiler.so                                                         void art::ValueSet::DeleteAllImpureWhich<art::ValueSet::Kill(art::SideEffects)::'lambda'(art::ValueSet::Node*)>(art::ValueSet::Kill(art::SideEffects)::'lambda'(art::ValueSet::Node*))
+0.12%     LegoHandler               23230  23260  /system/lib/libart.so                                                                  bool art::interpreter::DoCall<false, false>(art::ArtMethod*, art::Thread*, art::ShadowFrame&, art::Instruction const*, unsigned short, art::JValue*)
+0.12%     LegoHandler               23230  23260  /system/lib/libhwui.so                                                                 S32_opaque_D32_filter_DX_neon(SkBitmapProcState const&, unsigned int const*, int, unsigned int*)
+0.12%     RenderThread              23230  23457  /vendor/lib/egl/libGLESv2_adreno.so                                                    EsxGfxMem::UpdateTimestamp(EsxContext const*, EsxAccessType, EsxBucketIdReference*)
+0.12%     com.ss.android.ugc.aweme  23230  23230  /system/lib/libart.so                                                                  art::ReadBarrier::Mark(art::mirror::Object*)
+0.12%     com.ss.android.ugc.aweme  23230  23230  /system/lib/libart.so                                                                  art::jit::Jit::AddSamples(art::Thread*, art::ArtMethod*, unsigned short, bool)
+
+```

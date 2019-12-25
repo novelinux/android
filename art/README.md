@@ -14,6 +14,10 @@ ART 包括一个编译器（dex2oat 工具）和一个为启动 Zygote 而加载
 * .odex：其中包含 APK 中已经过 AOT 编译的方法代码。
 * .art (optional)：其中包含 APK 中列出的某些字符串和类的 ART 内部表示，用于加快应用启动速度。
 
+### dexopt
+
+[dexopt](./dexopt.png)
+
 ### dex2oat
 
 ART 的编译选项分为以下两个类别：
@@ -33,6 +37,8 @@ verify和quicken都没执行编译，之后代码跑解释器．而spped-profile
 
 编译速度：verify > quicken > speed-profile > speed
 
+[dex2oat log](./dex2oat.log)
+
 
 ### 系统 ROM 配置
 
@@ -42,3 +48,22 @@ verify和quicken都没执行编译，之后代码跑解释器．而spped-profile
 系统服务器代码：默认使用 speed 编译过滤器进行编译。
 产品专属的核心应用：默认使用 speed 编译过滤器进行编译。
 所有其他应用：默认使用 quicken 编译过滤器进行编译。
+
+### ART编译流程
+
+[ART编译流程](./art.webp)
+
+* 获取APK，通过dex2oat⼯具，按编译过滤规则来处理APK, 对应三⽅应⽤来说，会在data/app/应⽤ 包名+后续⼀串乱码/oat/arm下⽣成.vdex 、.odex、.art⽂件。
+* 解析.odex，加载⽬标类进内存。
+* 执⾏⽅法，先看当前⽅法是否被编译过，如果被编译过，优先使⽤JIT编译出来的机器码。如果没被编译过，⾛解释器执⾏，通过profile⽂件记录执⾏信息，超过⼀定执⾏次数之后，当前⽅法会变为 hot code, 该⽅法会通过JIT thread pool起⼦线程⾛JIT编译，⽣成机器码缓存在内存。 
+*  JIT编译过程会判断是否有⾜够内存，如果没有会触发回收。 
+* 在应⽤安装，动态加载， 系统升级， 后台优化( BackgroundDexoptService)等场景下，会触发 dex2oat按filter来编译。
+
+```shell
+dumpsys package packagename
+adb shell cmd package compile -c -f -m speed packagename
+```
+
+```shell
+adb shell am start -n com.ss.android.ugc.aweme/.main.MainActivity
+```
