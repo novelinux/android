@@ -1,0 +1,28 @@
+## app install log
+
+11-26 11:03:30.003  2064  2133 D com.android.server.pm.PackageManagerServiceInjector: check if need preinstall apps
+11-26 11:03:30.386  2064  2107 D com.android.server.pm.PackageManagerServiceInjector: Compiler-filter replaced to quicken
+11-26 11:03:30.391  2064  2107 I PackageManager.DexOptimizer: Running dexopt (dexoptNeeded=1) on: /data/app/com.ss.android.ugc.aweme-ZmOCKX8MRb9xcFJYl-abMg==/base.apk pkg=com.ss.android.ugc.aweme isa=arm dexoptFlags=boot_complete,public,enable_hidden_api_checks targetFilter=quicken oatDir=/data/app/com.ss.android.ugc.aweme-ZmOCKX8MRb9xcFJYl-abMg==/oat classLoaderContext=PCL[/system/framework/org.apache.http.legacy.boot.jar]
+11-26 11:03:42.871  2064  2107 D PackageManager: Instant App installer not found with android.intent.action.INSTALL_INSTANT_APP_PACKAGE
+11-26 11:03:42.871  2064  2107 D PackageManager: Clear ephemeral installer activity
+11-26 11:03:42.872  2064  2107 W Looper  : Slow Looper PackageManager: Long Msg: seq=49 plan=11:03:30.103  late=0ms wall=12769ms running=0ms h=com.android.server.pm.PackageManagerService$PackageHandler c=com.android.server.pm.PackageManagerService$10
+11-26 11:03:42.906  4655  4862 D PowerKeeperPackageManager: addPackage: com.ss.android.ugc.aweme 10172
+11-26 11:05:11.360  2064  2085 D PackageManager: Instant App installer not found with android.intent.action.INSTALL_INSTANT_APP_PACKAGE
+11-26 11:05:11.360  2064  2085 D PackageManager: Clear ephemeral installer activity
+11-26 11:05:16.933  2064  3936 D PackageManager: Instant App installer not found with android.intent.action.INSTALL_INSTANT_APP_PACKAGE
+11-26 11:05:16.933  2064  3936 D PackageManager: Clear ephemeral installer activity
+11-26 11:05:17.248  2064  3936 D PackageManager: Instant App installer not found with android.intent.action.INSTALL_INSTANT_APP_PACKAGE
+11-26 11:05:17.253  2064  3936 D PackageManager: Clear ephemeral installer activity
+11-26 11:05:20.045  2064 10674 I PackageManager.DexOptimizer: Running dexopt (dexoptNeeded=-3) on: /data/app/com.ss.android.ugc.aweme-ZmOCKX8MRb9xcFJYl-abMg==/base.apk pkg=com.ss.android.ugc.aweme isa=arm dexoptFlags=boot_complete,profile_guided,enable_hidden_api_checks targetFilter=speed-profile oatDir=/data/app/com.ss.android.ugc.aweme-ZmOCKX8MRb9xcFJYl-abMg==/oat classLoaderContext=PCL[/system/framework/org.apache.http.legacy.boot.jar]
+11-26 11:05:21.403  4655  4862 D PowerKeeperPackageManager: onPackageModified, userId: 0, packageName: com.ss.android.ugc.aweme
+11-26 11:05:53.040  2064 10674 D com.android.server.pm.PackageManagerServiceInjector: FirstUseActivity packageName = com.ss.android.ugc.aweme is compiled using filter = speed-profile, success = true
+11-26 11:05:53.040  2064 10674 I com.android.server.pm.PackageManagerServiceInjector: FirstUseActivity Pinning optimized code com.ss.android.ugc.aweme
+
+### PackageManagerService.performDexOptInternal
+
+11-26 11:05:53.041  2064  3936 W system_server: Long monitor contention with owner first_use_thread (10674) at boolean android.os.BinderProxy.transactNative(int, android.os.Parcel, android.os.Parcel, int)(BinderProxy.java:-2) waiters=0 in int com.android.server.pm.PackageManagerService.performDexOptInternal(com.android.server.pm.dex.DexoptOptions) for 33.117s
+
+### dexopt
+
+11-26 11:05:53.198  2064  3936 I PackageManager.DexOptimizer: Running dexopt (dexoptNeeded=-3) on: /data/app/com.ss.android.ugc.aweme-ZmOCKX8MRb9xcFJYl-abMg==/base.apk pkg=com.ss.android.ugc.aweme isa=arm dexoptFlags=boot_complete,profile_guided,force,enable_hidden_api_checks targetFilter=everything-profile oatDir=/data/app/com.ss.android.ugc.aweme-ZmOCKX8MRb9xcFJYl-abMg==/oat classLoaderContext=PCL[/system/framework/org.apache.http.legacy.boot.jar]
+11-26 11:06:22.823  2064 11883 I PackageManager.DexOptimizer: Running dexopt (dexoptNeeded=-3) on: /data/app/com.ss.android.ugc.aweme-ZmOCKX8MRb9xcFJYl-abMg==/base.apk pkg=com.ss.android.ugc.aweme isa=arm dexoptFlags=boot_complete,profile_guided,force,enable_hidden_api_checks targetFilter=everything-profile oatDir=/data/app/com.ss.android.ugc.aweme-ZmOCKX8MRb9xcFJYl-abMg==/oat classLoaderContext=PCL[/system/framework/org.apache.http.legacy.boot.jar]
