@@ -1,0 +1,93 @@
+1.3.1    2018-11-16
+  * New switch: "-P <pidfile>". When combined with -l or -L, the
+    PID of the daemon process will be written to this file.
+    (Thanks Jon Lin)
+  * In Makefile, support staged installs using DESTDIR
+    (Thanks Earnestly)
+  * Create snapcraft.yaml to enable snap creation
+    (Thanks Alan Pope)
+  * Fix compilation for pre-C99 compilers
+    (Thanks Rushikesh Jadhav)
+  * Documentation improvements
+
+1.3.0    2017-03-16
+  * New switch: "-b <file>". This enables "batch mode" where the
+    list of files to crawl is read from the specified file
+    (Thanks Tw)
+  * New switch: "-0". When this is enabled, the files in
+    "batch mode" are separated by NUL bytes instead of newlines
+  * New switch: "-F". Prevents vmtouch from traversing separate
+    filesystems (requested by mailinglists35)
+  * Lots of updates to the debian packaging (Thanks anarcat)
+  * Use standard path for manpages (Thanks anarcat)
+  * On linux, if an open fails due to EPERM then try again
+    without O_NOATIME
+
+1.2.0    2016-12-01
+  * -i feature which lets you ignore entire files and directories
+    (Thanks Etienne Bruines)
+  * -I feature which lets you only process filenames matching
+    certain patterns.
+  * Both -i and -I support wildcards
+  * Specify C99 standard during compile (Thanks ecebuzz)
+
+1.1.0    2016-08-08
+  * Better error checking for extremely large values to command
+    line parameters (Thanks Matthew Fernandez)
+  * Fix some boundary conditions in the range support added
+    in 1.0.1 (Thanks Justas Lavišius)
+  * On Linux, support touching/evicting/displaying block devices
+    directly. This displays the underlying buffer cache, not the
+    filesystem cache (Thanks to maq123 for the suggestion)
+  * On Linux, open files with O_NOATIME so that we don't cause
+    unnecessary disk activity recording access times
+    (Thanks Mat R.)
+  * Replaces a stat() call with an fstat() call which is slightly
+    more efficient.
+  * Skipped symlinks are no longer included in total file count
+  * Closes file descriptors after locking memory since there is
+    no need to keep them open. This makes it less likely you will
+    hit the RLIMIT_NOFILE when using -l or -L.
+  * TUNING.md file (Thanks to Artem Sheremet for the idea and
+    to Vladimir Kotal for Solaris tuning info)
+
+1.0.2    2015-12-04
+  * Clean-up Makefile and improve its portability.
+  * Documentation updates.
+
+1.0.1    2015-10-16
+  * Change default max file size (specified with -m) to
+    SIZE_MAX instead of 500m. This is 4G on 32-bit systems
+    and effectively unlimited on 64-bit systems.
+    (Thanks Erik Garrison)
+  * -p mode which lets you view/touch/evict/lock ranges of
+    files instead of just whole files. (Thanks Justas Lavišius)
+  * Update debian packaging files. (Thanks Luka Blaskovic)
+  * Fix bug that prevented you from trying to crawl your
+    entire filesystem from the root.
+  * Fix to work with glibc 2.20. (Thanks Jim Garrison)
+  * Fix format string warning when compiling with clang.
+    (Thanks Mikolaj Golub)
+  * Cleaner and better Makefile. (Thanks Emmanuel Kasper and
+    Mikolaj Golub)
+  * Don't double-count the same file that just happens to have
+    multiple hard-links to it. (Thanks Carsten Otto)
+  * Add option to wait for daemon mode to finish mlocking.
+    (Thanks Kristofer Karlsson)
+
+0.8.0    2012-12-04
+  * Patch from Marc Brooker: avoid overflowing stack when
+    allocating array for mincore() output
+  * Patch from Federico Lucifredi: Avoid ugly NaNs in output
+  * Full OS X support: msync(2) evicts pages on this system
+  * HP-UX support from Shane Seymour (thanks!)
+  * Patch from soarpenguin: detect invalid size formats
+
+0.7.3
+  * Solaris support for page eviction
+
+0.7.2
+  * Portability fixes
+
+0.7.1
+  * First public release

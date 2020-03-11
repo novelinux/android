@@ -21,6 +21,16 @@ Unable to select a master clock domain because no path can be found from "SYSTRA
 之后点击左上角的load加载你生成的test.log.html文件就可以正常查看。
 ```
 
+## trace app
+
+```
+./systrace.py -t 30 app -a com.android.startop.colorchanging
+```
+
+like this:
+
+[App Trace](./app-systrace.png)
+
 ## Refs
 
 https://www.jianshu.com/p/6bce4e256381
