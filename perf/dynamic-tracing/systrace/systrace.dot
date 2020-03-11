@@ -1,0 +1,104 @@
+digraph systrace {
+
+  subgraph cluster0 {
+    node [style=filled];
+    color = black;
+    label = "run_systrace";
+
+    a0[label="run_systrace.main"]
+    a1[label="run_systrace.main_impl"]
+    a2[label="run_systrace.parse_options"]
+
+    a0->a1->a2;
+
+    a3[label="run_systrace.initialize_devil"]
+    a4[label="atrace_agent.list_categories"]
+
+    a2->a3->a4[label="android"]
+
+    a5[label="ftrace_agent.list_categories"]
+
+    a2->a5[label="linux"]
+
+    a6[label="controller = systrace_runner.SystraceRunner"]
+    a7[label="controller.StartTracing()"]
+    a8[label="controller.StopTracing()"]
+    a9[label="controller.OutputSystraceResults"]
+
+    a4->a6;
+    a5->a6;
+    a6->a7->a8->a9;
+  }
+
+  subgraph cluster1 {
+    node [style=filled];
+    color = black;
+    label = "SystraceRunner";
+
+    b0[label="tracing_controller.CreateAgentsWithConfig"]
+    b1[label="tracing_controller.GetControllerConfig"]
+    b2[label="tracing_controller.TracingController(agents_with_config, controller_config)"]
+
+    b0->b1->b2;
+
+    b3[label="StartTracing"]
+    b4[label="StopTracing"]
+    b5[label="OutputSystraceResults"]
+  }
+
+  subgraph cluster2 {
+    node [style=filled];
+    color = black;
+    label = "TracingController";
+
+    c0[label="_controller_agent = TracingControllerAgent()"]
+    c1[label="StartTracing"]
+    c2[label="StopTracing"]
+  }
+
+  subgraph cluster3 {
+    node [style=filled];
+    color = black;
+    label = "TracingControllerAgent";
+
+    d0[label="StartAgentTracing"]
+    d1[label="StopAgentTracing"]
+  }
+
+  subgraph cluster4 {
+    node [style=filled];
+    color = black;
+    label = "AtraceAgent";
+
+    e0[label="StartAgentTracing"]
+    e1[label="StopAgentTracing"]
+  }
+
+  subgraph cluster10 {
+    node [style=filled];
+    color = black;
+    label = "output_generator";
+
+    g0[label="output_generator.GenerateJSONOutput"]
+    g1[label="output_generator.GenerateHTMLOutput"]
+  }
+
+  start->a0;
+  a6->b0;
+
+  a7->b3->c1->d0;
+  a8->b4->c2->d1;
+  a9->b5;
+
+  b2->c0;
+
+  c1->e0;
+  c2->e1;
+
+  b5->g0[label="json"];
+  b5->g1[label="html"];
+  b5->end;
+
+  start [shape=Mdiamond];
+  end [shape=Msquare];
+}
