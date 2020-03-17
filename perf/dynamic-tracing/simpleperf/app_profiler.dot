@@ -1,0 +1,84 @@
+digraph app_profiler {
+
+  subgraph cluster0 {
+    node[style=filled];
+    color = black;
+    label = "main";
+    ratio=fill;
+
+    a0[label="AppProfiler"]
+    #a1[label="NativeProgramProfiler"]
+    #a2[label="NativeCommandProfiler"]
+    #a3[label="NativeProcessProfiler"]
+    #a4[label="NativeThreadProfiler"]
+    #a5[label="SystemWideProfiler"]
+  }
+
+  subgraph cluster1 {
+    node [style=filled];
+    color = black;
+    label = "ProfilerBase";
+
+    b0[label="profile"]
+
+    b1[label="prepare"]
+    b11[label="download_simpleperf"]
+    b12[label="download_libs"]
+
+    b1->b11->b12;
+
+    #b2[label="start"]
+
+    b3[label="wait_profiling"]
+
+    b4[label="collect_profiling_data"]
+
+    b5[label="start_profiling"]
+  }
+
+  subgraph cluster2 {
+    node [style=filled];
+    color = black;
+    label = "AppProfiler";
+
+    c0[label="prepare"];
+    c00[label="compile_java_code"];
+
+    c0->b1[label="1"];
+    c0->c00[label="2"];
+
+    c1[label="start"]
+    c11[label="kill_app_process"]
+    c12[label="start_profiling"]
+
+    c13[label="start_activity"]
+    c14[label="start_test"]
+
+    c1->c11->c12;
+
+    c12->b5[label="1"];
+    c12->c13[label="2"];
+
+    c13->c14;
+  }
+
+  start->a0[label="-p"];
+
+  #start->a1[label="-np"];
+  #start->a2[label="-cmd"];
+  #start->a3[label="--pid"];
+  #start->a4[label="--tid"];
+  #start->a5[label="--system_wide"];
+
+  a0->b0;
+
+  b0->c0[label="1"];
+  b0->c1[label="2"];
+  b0->b3[label="3"];
+  b0->b4[label="4"];
+
+  b4->end;
+
+  start [shape=Mdiamond];
+  end [shape=Msquare];
+}
