@@ -69,8 +69,16 @@ nobody        1029     1   48416   4076 poll_schedule_timeout 0 S traced_probes
 
 ```
 adb shell perfetto --out /data/local/tmp/trace sched/sched_switch
+adb pull /data/local/tmp/trace .
 ```
 
+### Analysis trace
+
+* https://ui.perfetto.dev/
+
+Open trace file, so we can see like this:
+
+[Trace shced switch view](./res/trace_sched_switch.png)
 
 ## official website
 
