@@ -10,6 +10,65 @@ systrace 归 Google Android 和 Google Chrome 团队所有，且是作为 Catapu
 
 因为 systrace 构建于 ftrace 之上，而 ftrace 在 CPU 上运行，所以 CPU 上的活动必须写入用于记录硬件变化情况的 ftrace 缓冲区。这意味着，如果您想知道显示栅栏更改状态的原因，则可以查看在状态转换的确切点 CPU 上运行了哪些活动（在 CPU 上运行的某些活动在日志中触发了这种更改）。此概念是使用 systrace 分析性能的基础。
 
+Systrace 的功能包括跟踪系统的 I/O 操作、内核工作队列、CPU 负载以及 Android 各个子系统的运行状况等。在 Android 平台中，它主要由3部分组成：
+
+* 内核部分：Systrace 利用了 Linux Kernel 中的 ftrace 功能。所以，如果要使用 Systrace 的话，必须开启 kernel 中和 ftrace 相关的模块。
+* 数据采集部分：Android 定义了一个 Trace 类。应用程序可利用该类把统计信息输出给ftrace。同时，Android 还有一个 atrace 程序，它可以从 ftrace 中读取统计信息然后交给数据分析工具来处理。
+* 数据分析工具：Android 提供一个 systrace.py（ python 脚本文件，位于 Android SDK目录/platform-tools/systrace 中，其内部将调用 atrace 程序）用来配置数据采集的方式（如采集数据的标签、输出文件名等）和收集 ftrace 统计数据并生成一个结果网页文件供用户查看。 从本质上说，Systrace 是对 Linux Kernel中 ftrace 的封装。应用进程需要利用 Android 提供的 Trace 类来使用 Systrace.
+
+## systrace支持的事件：
+
+* gfx - Graphics
+* input - Input
+* view - View
+* webview - WebView
+* wm - Window Manager
+* am - Activity Manager
+* audio - Audio
+* video - Video
+* camera - Camera
+* hal - Hardware Modules
+* res - Resource Loading
+* dalvik - Dalvik VM
+* rs - RenderScript
+* sched - CPU Scheduling
+* freq - CPU Frequency
+* membus - Memory Bus Utilization
+* idle - CPU Idle
+* disk - Disk input and output
+* load - CPU Load
+* sync - Synchronization Manager
+* workq - Kernel Workqueues Note: Some trace categories are not supported on all devices. Tip: If you want to see the names of tasks in the trace output, you must include the sched category in your command parameters.
+
+## 线程状态
+
+* 灰色：正在休眠。
+
+线程没有工作要做，可能是因为线程在互斥锁上被阻塞。
+
+* 蓝色：可运行（它可以运行，但是调度程序尚未选择让它运行）。
+
+作用：Runnable 状态的线程状态持续时间越长，则表示 cpu 的调度越忙，没有及时处理到这个任务：
+
+是否后台有太多的任务在跑？
+没有及时处理是因为频率太低？
+没有及时处理是因为被限制到某个 cpuset 里面，但是 cpu 很满？
+
+* 绿色：正在运行（调度程序认为它正在运行）。
+作用：查看其运行的时间，与竞品做对比，分析快或者慢的原因：
+
+是否频率不够？
+是否跑在了小核上？
+是否频繁在 Running 和 Runnable 之间切换？为什么？
+是否频繁在 Running 和 Sleep 之间切换？为什么？
+是否跑在了不该跑的核上面？比如不重要的线程占用了超大核
+
+* 红色：不可中断休眠（通常在内核中处于休眠锁定状态）。可以指示 I/O 负载，在调试性能问题时非常有用。
+
+线程在另一个内核操作（通常是内存管理）上被阻塞, 例如page_fault
+
+* 橙色：由于 I/O 负载而不可中断休眠。
+
 ## show current window
 
 ```
