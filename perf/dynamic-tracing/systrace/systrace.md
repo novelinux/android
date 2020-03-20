@@ -16,6 +16,21 @@ Systrace 的功能包括跟踪系统的 I/O 操作、内核工作队列、CPU �
 * 数据采集部分：Android 定义了一个 Trace 类。应用程序可利用该类把统计信息输出给ftrace。同时，Android 还有一个 atrace 程序，它可以从 ftrace 中读取统计信息然后交给数据分析工具来处理。
 * 数据分析工具：Android 提供一个 systrace.py（ python 脚本文件，位于 Android SDK目录/platform-tools/systrace 中，其内部将调用 atrace 程序）用来配置数据采集的方式（如采集数据的标签、输出文件名等）和收集 ftrace 统计数据并生成一个结果网页文件供用户查看。 从本质上说，Systrace 是对 Linux Kernel中 ftrace 的封装。应用进程需要利用 Android 提供的 Trace 类来使用 Systrace.
 
+## example
+
+```
+./systrace.py -t 20 gfx input view webview wm am res sched freq idle disk  -a com.google.android.wearable.app
+```
+
+### issues
+
+```
+Unable to select a master clock domain because no path can be found from "SYSTRACE" to "LINUX_FTRACE_GLOBAL".解决方法
+
+在chrome浏览器的地址栏中输入：chrome://tracing
+之后点击左上角的load加载你生成的test.log.html文件就可以正常查看。
+```
+
 ## systrace支持的事件：
 
 * gfx - Graphics
@@ -69,28 +84,30 @@ Systrace 的功能包括跟踪系统的 I/O 操作、内核工作队列、CPU �
 
 * 橙色：由于 I/O 负载而不可中断休眠。
 
+**Linux 常见的进程状态*:
+
+D 无法中断的休眠状态（通常 IO 的进程）
+R 正在可运行队列中等待被调度的；
+S 处于休眠状态；
+T 停止或被追踪；
+X 死掉的进程 （基本很少見）
+Z 僵尸进程；
+
+### 线程状态信息
+
+[线程状态](./res/systrace-thread-info.png)
+
+### 函数运行片段信息
+
+[函数运行片段信息](./res/systrace-function-slice.png)
+
 ## show current window
 
 ```
 adb shell dumpsys window | grep mCurrentFocus
 ```
 
-## command
-
-```
-./systrace.py -t 20 gfx input view webview wm am res sched freq idle disk  -a com.google.android.wearable.app
-```
-
-## issues
-
-```
-Unable to select a master clock domain because no path can be found from "SYSTRACE" to "LINUX_FTRACE_GLOBAL".解决方法
-
-在chrome浏览器的地址栏中输入：chrome://tracing
-之后点击左上角的load加载你生成的test.log.html文件就可以正常查看。
-```
-
-## trace app
+## trace app example
 
 ```
 ./systrace.py -t 30 app -a com.android.startop.colorchanging
