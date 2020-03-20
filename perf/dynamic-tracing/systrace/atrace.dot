@@ -1,0 +1,35 @@
+digraph atrace {
+
+  subgraph cluster0 {
+    node [style=filled];
+    color = black;
+    label = "atrace";
+
+    a0[label="main"]
+    a1[label="findTraceFiles"]
+
+    a2[label="setUpUserspaceTracing"]
+    a3[label="setUpKernelTracing"]
+    a4[label="setUpVendorTracing"]
+
+    a5[label="startTrace"]
+    a6[label="stopTrace"]
+    a7[label="dumpTrace"]
+
+    a0->a1->a2->a3->a4->a5->a6->a7;
+  }
+
+  subgraph cluster0 {
+    node [style=filled];
+    color = green;
+    label = "setUpUserspaceTracing";
+
+
+  }
+
+  start->a0;
+  a7->end;
+
+  start [shape=Mdiamond];
+  end [shape=Msquare];
+}
