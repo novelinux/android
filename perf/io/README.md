@@ -30,7 +30,7 @@ A.启动systrace
 B.启动App
 C.生成systrace
 
-启动过程中的read序列抽取出来写入新的文件，如下是头条启动过程中的read序列
+启动过程中的read序列抽取出来写入新的文件，如下是启动过程中的read序列
 
 4.strace
 
