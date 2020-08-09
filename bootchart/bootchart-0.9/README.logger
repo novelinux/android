@@ -1,0 +1,176 @@
+Operation
+---------
+
+When bootchartd is started by the kernel (passed init=/sbin/bootchartd), it
+will first start boot logging in background and then exec /sbin/init or an
+alternative init process.
+The boot logger will mount a tmpfs file system for log file storage and wait
+for /proc to be mounted.  It will then run several logging functions in
+parallel and wait for the boot process to end (i.e. one of the predefined
+processes for runlevels 2, 3 or 5 is running).
+
+
+Monitoring applications
+-----------------------
+
+In addition to the boot process, the bootchartd logger may also be used to
+profile a running system or specific applications.  This may performed by
+regular users as well, by using the following procedure:
+
+  1. Copy the default bootchartd configuration file locally:
+
+     $ cp /etc/bootchartd.conf /home/joe/tmp/
+
+  2. Edit /home/joe/tmp/bootchartd.conf and replace the BOOTLOG_DEST
+     value with a directory with write permissions, e.g.
+       
+       BOOTLOG_DEST=/home/joe/tmp/bootchart.tgz
+
+  3. Run bootchartd from within /home/joe/tmp/, profiling the system
+     in general or a specific application:
+
+     $ cd /home/joe/tmp/
+     
+     # to profile the system in general:
+     $ /sbin/bootchart start; sleep 5; /sbin/bootchartd stop
+     
+     # to profile a specific application, e.g. evolution:
+     $ /sbin/bootchart start evolution
+
+  4. Render the generated log file:
+
+     $ /usr/bin/bootchart /home/joe/tmp/bootchart.tgz
+
+     Alternatively, upload the log tarball to the renderer web service.
+
+
+Log files
+---------
+
+The bootchartd script will create various log files.  Note that all statistics
+log entries start with the time, specified as uptime in jiffies (1/100 s).
+Log entries are written every 0.2 seconds by default.  Detailed information
+about the /proc entries is available in the proc(5) manual page.
+
+The files available in /var/log/bootchart.tgz are:
+
+1. header
+
+   Basic information about the system and logger.  The following properties
+   are set (with sample values):
+
+   === header ===
+   version = 0.9
+   title = Boot chart for serenity.klika.si (Wed Jan 19 22:21:53 CET 2005)
+   system.uname = Linux 2.6.10-1.741_FC3 #1 Thu Jan 13 16:38:22 EST 2005 i686 GNU/Linux
+   system.release: Fedora Core release 3 (Heidelberg)
+   system.cpu = model name : Intel(R) Pentium(R) M processor 1500MHz (1)
+   system.kernel.options = ro root=/dev/vg0/root vga=0x318 quiet grub
+   ==============
+
+
+2. proc_stat.log
+
+   The CPU statistics collected from /proc/stat.
+   
+   Example:
+   
+   === proc_stat.log ===
+   691
+   cpu  8 0 141 313 230 0 0
+   cpu0 8 0 141 313 230 0 0
+   intr 7454 6943 8 0 1 3 1 0 0 0 1 1 1 99 0 373 23
+   ctxt 4607
+   btime 1106875682
+   processes 531
+   procs_running 2
+   procs_blocked 1
+
+   ...
+   =====================
+
+
+3. proc_diskstats.log (optional)
+
+   The disk IO statistics collected from /proc/diskstats.  Note that these
+   are only available when using a 2.6 kernel (or a patched 2.4 kernel).
+   
+   Example:
+   
+   === proc_diskstats.log ===
+   704
+      1    0 ram0 0 0 0 0 0 0 0 0 0 0 0
+      1    1 ram1 0 0 0 0 0 0 0 0 0 0 0
+      ...
+      3    0 hda 357 18 7963 7619 0 0 0 0 3 2522 7789
+      ...
+
+   ...
+   ==========================
+
+
+4. proc_ps.log
+
+   Process status information, collected from /proc/[PID]/stat files.
+   Used to reconstruct the process tree and track process states and CPU
+   usage.  Example:
+   
+   === proc_ps.log ===
+   692
+   1 (init) S 0 0 0 0 -1 8388864 656 ...
+   138 (kblockd/0) S 3 0 0 0 -1 32832 0 ...
+   146 (khubd) S 1 1 1 0 -1 64 0 ...
+   16 (kacpid) S 3 0 0 0 -1 32832 0 ...
+   2 (ksoftirqd/0) S 1 0 0 0 -1 32832 ...
+
+   ...
+   ==============
+
+ 
+5. init_pidname.log (optional)
+   
+   The PID to process name mapping file.  Used for Gentoo, where many init
+   scripts are sourced and thus shown as "rc boot" or "rc default" in the
+   process listing.  The Gentoo init patch however will maintain this log
+   file by storing the actual script names and mapping them to PIDs.
+   Example:
+   
+   === init_pidname.log ===
+   2969=checkroot
+   2996=hostname
+   3003=modules
+   7263=coldplug
+   ...
+   ===================
+
+
+6. kernel_pacct (optional)
+
+   Process accounting information.  Created if BSD process accounting v3 is
+   configured when compiling the kernel (CONFIG_BSD_PROCESS_ACCT_V3).  The
+   GNU accounting tools also need to be installed (psacct or acct package).
+   
+   The file contains detailed process information, useful for filling in any
+   process dependency blanks caused by the polling nature of
+   /proc/[PID]/stat logging.  The file is binary and is defined in
+   include/linux/acct.h.
+   
+   General information about process accounting is available in the HOWTO:
+   http://www.tldp.org/HOWTO/Process-Accounting/
+
+
+Alternative init processes
+--------------------------
+
+Alternative init processes (e.g. initng) may be specified using the
+bootchart_init kernel command line option, e.g.:
+
+  init=/sbin/bootchartd bootchart_init=/sbin/initng
+
+In this case, bootchartd will execute /sbin/initng instead of the default
+/sbin/init.
+
+
+
+http://www.bootchart.org
+Ziga Mahkovec  <ziga.mahkovec@klika.si>

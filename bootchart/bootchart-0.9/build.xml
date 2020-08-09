@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This is the bootchart build file, to be used with the Apache Ant build tool.
+-->
+<project name="bootchart" default="all" basedir=".">
+
+	<!-- Overrides properties -->
+	<property file="build.properties"/>
+	
+	<!-- Compilation properties -->
+	<property name="compiler.nowarn"      value="false"/>
+	<property name="compiler.debug"       value="false"/>
+	<property name="compiler.optimize"    value="false"/>
+	<property name="compiler.deprecation" value="false"/>
+	<property name="j2se.apidoc" value="http://java.sun.com/j2se/1.4/docs/api/"/>
+
+	<!-- Paths -->
+	<property environment="env"/>
+	<property name="lib.home"   value="${basedir}/lib"/>
+	<property name="src.home"   value="${basedir}/src"/>
+	<property name="build.home" value="${basedir}/build"/>
+	<property name="docs.home"  value="${basedir}/javadoc"/>
+	<property name="jar.name"  value="bootchart.jar"/>
+	
+	<!-- Targets -->
+
+	<!-- Prepare -->
+	<target name="prepare" description="Prepare">
+		<mkdir dir="${build.home}"/>
+	</target>
+	
+	<!-- Compile -->
+	<target name="classes" depends="prepare" description="Build classes">
+		<!-- compile libraries -->
+		<javac srcdir="${lib.home}"
+			destdir="${build.home}"
+			nowarn="true"
+			debug="${compiler.debug}"
+			optimize="${compiler.optimize}"
+			deprecation="${compiler.deprecation}"
+			classpath="${build.home}">
+			<include name="**/*.java"/>
+		</javac>
+		<!-- compile source files -->
+		<javac srcdir="${src.home}"
+			destdir="${build.home}"
+			nowarn="${compiler.nowarn}"
+			debug="${compiler.debug}"
+			optimize="${compiler.optimize}"
+			deprecation="${compiler.deprecation}"
+			classpath="${build.home}">
+			<include name="**/*.java"/>
+			<exclude name="**/servlet/**"/>
+		</javac>
+	</target>
+	
+	<!-- Package JAR -->
+	<target name="jar" depends="classes" description="Create JAR">
+		<!-- create jar package -->
+		<jar jarfile="${jar.name}">
+			<fileset dir="${build.home}" includes="**/*.class,**/*.properties,**/*.template"/>
+			<fileset dir="${basedir}" includes="svg/**"/>
+			<manifest>
+				<attribute name="Built-By" value="${env.USER}"/>
+				<attribute name="Manifest-Version" value="1.0"/>
+				<attribute name="Main-Class" value="org.bootchart.Main"/>
+			</manifest>
+		</jar>
+	</target>
+	
+	<!-- Create Javadoc API documentation -->
+	<target name="javadoc" depends="classes" description="Create Javadoc">
+		<mkdir dir="${docs.home}/api"/>
+		<javadoc sourcepath="${src.home}:${lib.home}"
+			destdir="${docs.home}/api"
+			Overview="${src.home}/overview.html"
+			Windowtitle="Bootchart"
+			DocTitle="Bootchart API Specification"
+			packagenames="org.bootchart.*"
+			excludepackagenames="org.bootchart.servlet">
+			<link href="${j2se.apidoc}"/>
+		</javadoc>
+	</target>
+
+	<!-- Clean -->
+	<target name="clean" description="Clean">
+		<delete dir="${build.home}"/>
+		<delete dir="${docs.home}"/>
+		<delete file="${jar.name}"/>
+	</target>
+	
+	<!-- Test -->
+	<target name="test" depends="jar" description="Test">
+		<java classname="org.bootchart.Main" classpath="${jar.name}">
+			<arg line="./examples/"/>
+		</java>
+	</target>
+	
+	<!-- Build all -->
+	<target name="all" depends="jar,javadoc" description="All"/>
+
+</project>

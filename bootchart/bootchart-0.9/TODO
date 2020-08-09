@@ -1,0 +1,8 @@
+TODO
+----
+
+- Include number of open files statistics.
+
+- Include kernel boot profiling.
+
+- Debian packaging.

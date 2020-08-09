@@ -1,0 +1,17 @@
+<!-- Process position -->
+<g class="Process" transform="translate({0})">
+	<g class="ProcessStatus">
+		<!-- Process timeline -->
+		{1}
+	</g>
+	<!-- Process border -->
+	<rect x="0" y="0" {2} transform="translate(0.5, 0.5)"/>
+	<!-- Process name -->
+	
+	<g class="Connector" transform="translate(0.5, 0.5)">
+		<!-- Parent process connector lines -->
+		{3}
+	</g>
+	<title>{6}</title>
+</g>
+<text transform="translate({0})" class="ProcessLabel" {4}>{5}</text>

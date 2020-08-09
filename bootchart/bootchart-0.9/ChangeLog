@@ -1,0 +1,857 @@
+2005-11-13  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* README.logger, install.sh, package/bootchart.spec: Bumped
+	  version.
+
+2005-11-13  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* src/org/bootchart/common/Common.java: Bumped version.
+
+	* src/org/bootchart/: Main.java, common/ProcessTree.java: Removed
+	  unused code.
+
+	* README.logger: Added section about monitoring applications.
+
+2005-11-07  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	Thanks to Jörg Sommer: 
+	* script/bootchartd, src/org/bootchart/common/ProcessTree.java:
+	  Fix init parameter passing.  Fix compiler warnings in
+	  ProcessTree.
+
+2005-10-25  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	Patch from Lorenzo Colitti:
+	* script/bootchartd: Retrieve uptime from /proc/uptime instead of
+	  /proc/stat.
+
+2005-10-25  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* script/bootchartd: Fixed mktemp syntax (thanks to Lorenzo
+	  Colitti).
+
+2005-10-20  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	Patch from Lorenzo Colitti and Stephan Kulow:
+	* script/: bootchartd, bootchartd.conf: Improve
+	  customization to allow regular user monitoring.
+
+2005-10-18  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	Patch from Lorenzo Colitti and Stephan Kulow:
+	* src/org/bootchart/: Main.java, common/ProcessTree.java,
+	  common/PsStats.java, parser/linux/ProcPsParser.java,
+	  parser/linux/PsParser.java: Improve support for monitoring
+	  applications. Factor out PsStats.
+
+2005-10-14  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* src/org/bootchart/Main.java: Fixed output file name handling
+	  (Debian bug #333753).  Worked around TarInputStream's lack of
+	  validation.
+
+2005-10-10  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* src/org/bootchart/common/ProcessTree.java: Base boot processes
+	  off their absolute start times.
+
+	* src/org/bootchart/parser/linux/ProcPsParser.java: Fixed bug where
+	  processes were being pruned too soon (reported by Stephan Kulow).
+
+2005-10-03  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* src/org/bootchart/Main.java: Report error when no log files are
+	  available (thanks to Benjamin Carlyle).
+
+2005-09-26  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* install.sh, uninstall.sh, package/bootchart.spec,
+	  script/bootchartd, script/bootchartd.conf: Changed tmpfs to mount
+	  in /mnt and immediately do a lazy umount (thanks to Jörg Sommer
+	  and Miquel van Smoorenburg).
+
+2005-09-25  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* README.logger, script/bootchartd, script/bootchartd.conf: Added
+	  kernel cmdline option for specifying an alternative init process
+	  (thanks to Jörg Sommer).
+
+2005-07-31  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* script/: bootchartd, bootchartd.conf: New options for alternative
+	  init invocations (thanks to Xavier Lagraula).
+
+2005-07-25  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* script/bootchartd: Removed the proc/*/stat globbing hack
+	  (Jörg Sommer).
+	  Reintroduced the gdm-binary exit process.
+	  Added support for Frugalware (Laszlo Dvornik).
+
+2005-07-05  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	Patch from Jörg Sommer <joerg@alea.gnuu.de>:
+	* script/bootchartd: Additional scripting improvements.
+
+	* src/org/bootchart/Main.java: Replace PosixParser with GnuParser
+	  to handle unrecognized options.  Improve handling of dashes in
+	  log file names.
+
+2005-07-04  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	Patch from Jörg Sommer <joerg@alea.gnuu.de>:
+	* script/bootchartd: Various scripting improvements.
+
+	* src/org/bootchart/: renderer/ImageRenderer.java, Main.java:
+	  Handle a missing header file.  Fix an arithmetic exception.
+
+2005-06-16  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* script/bootchartd: Fixed CPU count check for Hyper-Threading
+	  systems.  Thanks to Maurice van der Pot <griffon26@gentoo.org>.
+
+2005-05-24  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* build.xml: Turned off debug and lib warnings.
+
+	* package/bootchart.spec: Added missing BuildRequires for
+	  jakarta-commons.cli.
+
+2005-05-05  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* script/: bootchartd, bootchartd.conf: Allow for alternate init(1)
+	  invocations.
+
+2005-04-10  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* script/bootchartd: Added support for FC4's early-login.
+
+	* src/org/bootchart/: common/ProcessTree.java,
+	  parser/linux/ProcPsParser.java: Varios improvements in process
+	  tree building.
+
+	* src/org/bootchart/renderer/ImageRenderer.java: Minor color
+	  changes.
+
+2005-03-03  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* src/org/bootchart/servlet/RenderServlet.java: Accept custom log
+	  file suffixes.
+
+	* src/org/bootchart/common/ProcessTree.java: Improved detection of
+	  background processes.
+
+	* src/org/bootchart/parser/linux/ProcPsParser.java: Fixed the key
+	  used in cpu-times maps (thanks to Stephan Kulow).
+
+2005-02-13  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* script/bootchart: Added VM argument to enable the Cairo backend
+	  with GCJ.
+
+	* package/bootchart.spec: Removed LICENSE.epsgraphics.txt.
+
+	* script/bootchartd, src/org/bootchart/renderer/ImageRenderer.java,
+	  src/org/bootchart/renderer/SVGRenderer.java,
+	  src/org/bootchart/Main.java,
+	  src/org/bootchart/common/ProcessTree.java: Changes to enable
+	  specific application profiling.
+
+	* src/org/bootchart/parser/linux/PsParser.java: Improved command
+	  name handling.
+
+2005-02-13  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* src/org/bootchart/renderer/ImageRenderer.java: Fixed
+	  setRenderingHints call for GCJ compatibility.
+
+	* lib/LICENSE.pngencoder.txt,
+	  src/org/bootchart/renderer/PNGRenderer.java: Replaced PngEncoder
+	  with ImageIO.write as GCJ now implements it.
+
+2005-02-12  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* src/org/bootchart/common/: CPUSample.java, Common.java,
+	  DiskTPutSample.java, DiskUtilSample.java, FileOpenSample.java,
+	  Process.java, ProcessSample.java, Sample.java: Checkstyle
+	  cleanup.
+
+	* src/org/bootchart/: renderer/ImageRenderer.java,
+	  renderer/SVGRenderer.java, parser/linux/ProcDiskStatParser.java:
+	  Removed obsolete parsers.
+
+2005-02-12  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* src/org/bootchart/: parser/linux/IostatParser.java,
+	  parser/linux/TopParser.java, Main.java: Removed obsolete parsers.
+
+2005-02-09  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* src/org/bootchart/: renderer/CSSInliner.java,
+	  renderer/ImageRenderer.java, renderer/SVGRenderer.java,
+	  Main.java, common/CPUSample.java, common/Common.java,
+	  common/DiskTPutSample.java, common/DiskUtilSample.java,
+	  common/FileOpenSample.java, common/ProcessSample.java,
+	  parser/linux/PacctParser.java,
+	  parser/linux/ProcDiskStatParser.java: Fixed issues reported by
+	  findbugs.
+
+2005-02-08  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* script/bootchartd: Replaced shcat with cat for performance
+	  reasons.
+
+	* README.logger: Removed reference to kernel patches.
+
+	* uninstall.sh, install.sh: Set ROOT.
+
+2005-02-08  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* INSTALL, README, TODO: Fixed documentation typos.
+
+2005-02-07  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* package/bootchart.spec: Removed jpp references.
+
+	* .cvsignore: Added javadoc.
+
+	* INSTALL: Added Kaffe to the free Java success stories.
+
+	* src/org/bootchart/renderer/ImageRenderer.java,
+	  svg/bootchart.svg.template, svg/style.css: Improved coloring and
+	  labels.
+
+	* src/org/bootchart/parser/linux/: ProcPsParser.java: Improved
+	  active process detection.
+
+2005-02-07  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* INSTALL: Updated free JRE documentation.
+
+	* src/org/bootchart/: parser/linux/IostatParser.java,
+	  parser/linux/TopParser.java, common/Common.java,
+	  common/ProcessTree.java, common/Sample.java,
+	  renderer/ImageRenderer.java, renderer/SVGRenderer.java,
+	  Main.java: Various free JRE compatibility workarounds.
+
+2005-02-06  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* src/org/bootchart/parser/linux/ProcPsParser.java: Moved PPID
+	  detection.
+
+	* src/org/bootchart/parser/linux/PacctParser.java: Fixed forkMap
+	  entries.
+
+	* src/org/bootchart/common/ProcessTree.java: Reinstated process
+	  sorting by PID.
+
+	* script/bootchartd: Fixed release retrieval for SUSE.
+
+	* src/org/bootchart/Main.java: Print input file name.
+
+	* package/bootchart.spec: Added missing jpackage-utils requirement.
+
+2005-02-04  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* src/org/bootchart/: common/Common.java, common/Process.java,
+	  common/ProcessTree.java, renderer/SVGRenderer.java,
+	  parser/linux/PidNameParser.java, parser/linux/ProcPsParser.java:
+	  Include process description is SVG tooltips
+	  (recommended by Paul Pacheco).
+
+	* package/bootchart.spec: Fixed spec tags.
+
+2005-02-02  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* README.logger: Minor documentation fix.
+
+	* src/org/bootchart/renderer/ImageRenderer.java: Fix for top's
+	  sample timing issues.
+
+	* src/org/bootchart/parser/linux/PacctParser.java: Parse command
+	  name for debugging purposes.	Improved readUint32.
+
+2005-02-01  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* examples/bootchart.tgz: Updated sample log file.
+
+	* script/bootchartd, INSTALL, README, README.logger,
+	  src/org/bootchart/parser/linux/ProcPsParser.java,
+	  src/org/bootchart/parser/linux/PacctParser.java,
+	  src/org/bootchart/Main.java: Updated documentation.
+
+	* svg/style.css, src/org/bootchart/renderer/ImageRenderer.java:
+	  Improved coloring scheme.
+
+	* src/org/bootchart/renderer/SVGRenderer.java: Fixed renderering of
+	  delayed charts.
+
+2005-01-30  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* INSTALL, README, README.logger: Updated documentation.
+
+	* src/org/bootchart/servlet/RenderServlet.java: Updated renderer
+	  code.  Added doGet() with HTML code for a test form.
+
+	* src/org/bootchart/parser/linux/ForkParser.java,
+	  src/org/bootchart/parser/linux/PacctParser.java,
+	  src/org/bootchart/parser/linux/ProcPsParser.java,
+	  src/org/bootchart/parser/linux/PsParser.java,
+	  src/org/bootchart/parser/linux/TopParser.java, script/bootchartd,
+	  script/bootchartd.conf, src/org/bootchart/Main.java,
+	  src/org/bootchart/common/ProcessTree.java: Implemented parser for
+	  BSD process accounting.  Removed ForkParser and the fork kernel
+	  patch.
+
+	* package/bootchart.spec: Removed references to JPackage.
+
+2005-01-29  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* README, README.logger: Updated documentation.
+
+	* build.xml: Removed deprecation and javadoc warnings.
+
+	* src/org/bootchart/: parser/linux/ProcPsParser.java,
+	  renderer/ImageRenderer.java: Fixed CPU statistics overflow
+	  (thanks to Markus Bertheau).
+
+	Patch from Bobby Jack:
+	* install.sh, package/bootchart.spec: Fixed sed syntax.
+
+	* script/bootchartd: Workaround for Gentoo's /etc/issue.
+
+2005-01-28  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* examples/: bootchart.tgz, bootlog.tgz: Updated sample logs.
+
+2005-01-28  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* src/org/bootchart/renderer/ImageRenderer.java: Fixed drawing of
+	  delayed charts.
+
+	* src/org/bootchart/parser/linux/: ProcDiskStatParser.java,
+	  ProcStatParser.java, PsParser.java: Minor parsing changes.
+
+	* src/org/bootchart/parser/linux/ProcPsParser.java:
+	  /proc/[number]/stat parser.
+
+	* src/org/bootchart/servlet/RenderServlet.java: Renamed bootlog to
+	  bootchartd.
+
+	* script/bootchartd, script/bootchartd.conf, script/bootlog,
+	  script/bootlog.conf, package/bootchart.spec,
+	  script/kernel/bootchart.fork-2.6.9.patch,
+	  script/kernel/bootlog.fork-2.6.9.patch,
+	  src/org/bootchart/Main.java,
+	  src/org/bootchart/common/Common.java,
+	  src/org/bootchart/common/ProcessTree.java, INSTALL, README,
+	  README.logger, install.sh, uninstall.sh: Renamed bootlog to
+	  bootchartd (thanks to Paul Pacheco).
+
+2005-01-26  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* INSTALL, README, README.logger: Updated documentation.
+
+	* build.xml: Removed classpath from the javadoc target.
+
+	* script/bootlog, package/bootchart.spec, script/bootlog.conf,
+	  install.sh, uninstall.sh: Changed invocation (bootlog is called
+	  directly by the kernel).
+
+	* src/org/bootchart/Main.java: Added support for reading log files
+	  from a directory.
+
+	* src/org/bootchart/common/ProcessTree.java: Pruning changes.
+
+2005-01-25  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* package/bootchart.spec: Updated source directory.
+
+2005-01-25  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* script/bootlog: Updated header comment.
+
+2005-01-23  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* package/bootchart.spec, uninstall.sh: Init patch safety switches.
+
+2005-01-23  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* svg/bootchart.svg.template, svg/style.css,
+	  src/org/bootchart/renderer/SVGRenderer.java,
+	  src/org/bootchart/parser/linux/PsParser.java,
+	  src/org/bootchart/renderer/ImageRenderer.java: Improved color
+	  scheme.
+
+	* INSTALL, README, README.logger: Documentation updates.
+
+	* script/bootlog: Prevent race conditions.  Various compatibility
+	  fixes.
+
+	* src/org/bootchart/parser/linux/PsParser.java: Reduced log level.
+
+	* src/org/bootchart/common/Common.java, build.xml, install.sh,
+	  uninstall.sh, examples/bootchart.log.tar.gz,
+	  examples/bootlog.tgz, package/bootchart.spec,
+	  src/org/bootchart/Main.java, script/bootlog.conf,
+	  src/org/bootchart/servlet/RenderServlet.java: Moved bootlog to
+	  /sbin.  Renamed log to bootlog.tgz.
+
+2005-01-21  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* package/bootchart.spec, install.sh, uninstall.sh,
+	  script/bootlog.conf: Renamed /mnt/bootchart to /mnt/bootlog.
+
+2005-01-21  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* src/org/bootchart/*, script/bootchart, .classpath: Renamed
+	  packages to org.bootchart.
+
+	* script/distro: Removed unused patches.
+
+	* svg/bootchart.svg.template: Minor style improvements.
+
+	* INSTALL, README, README.logger, TODO: Updated documentation.
+
+	* install.sh, uninstall.sh: bootlog changes.
+
+	* build.xml: Changes for JPackage compatibility.
+
+	* .classpath: Moved library sources to lib
+
+	* package/bootchart.spec: JPackage-compatible RPM spec.
+
+	* script/bootchart: JPackage script.
+
+	* script/bootlog: Replaced top and iostat with /proc loggers.
+	  Changed invocation.  Wait for /proc to be mounted and the boot
+	  process to complete.
+
+	* script/bootlog.conf: bootlog configuration.
+
+	* script/toprc: top is no longer used.
+
+	* examples/bootchart.log.tar.gz: Updated sample log file.
+
+	* lib/: org/apache/commons/compress/*,
+	  LICENSE.cli.txt, LICENSE.epsgraphics.txt, LICENSE.pngencoder.txt,
+	  commons-cli-1.0.jar, commons-compress-cvs-2004-12-22.jar,
+	  epsgraphics.jar, com/keypoint/PngEncoder.java,
+	  com/keypoint/PngEncoderB.java,
+	  org/apache/commons/cli/*,
+	  org/apache/commons/compress/tar/*,
+	  org/apache/commons/lang/NumberUtils.java,
+	  org/jibble/epsgraphics/*: Replaced binary libraries with
+	  sources.
+
+2005-01-09  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* INSTALL, README: Updated documentation.
+
+	* build.xml, .classpath: Added epsgraphics.jar.
+
+	* src/si/klika/bootchart/renderer/SVGRenderer.java,
+	  svg/bootchart.svg.template, svg/style.css: Synced with PNG
+	  renderer.
+
+	* src/si/klika/bootchart/: renderer/EPSRenderer.java,
+	  renderer/ImageRenderer.java, renderer/PNGRenderer.java,
+	  renderer/Renderer.java, servlet/RenderServlet.java: Factored out
+	  ImageRenderer.  Implemented EPS renderer.
+
+	* src/si/klika/bootchart/Main.java: Refactored the common package
+	  for better abstraction.
+
+	* src/si/klika/bootchart/parser/: ForkParser.java,
+	  HeaderParser.java, IostatParser.java, TopParser.java: Refactored
+	  the common package for better abstraction.
+
+	* lib/epsgraphics.jar: EPS Graphics2D package.
+
+	* script/bootlog, src/overview.html: Changed project page URL.
+
+	* src/si/klika/bootchart/common/: BootStats.java, CPUSample.java,
+	  Common.java, DiskTPutSample.java, DiskUtilSample.java,
+	  FileOpenSample.java, IostatSample.java, Process.java,
+	  ProcessSample.java, ProcessTree.java, Sample.java, Stats.java,
+	  TopSample.java, package.html: Refactored the common package for
+	  better abstraction.
+
+2004-12-22  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* .classpath, INSTALL, build.xml, lib/LICENSE.cli.txt,
+	  lib/LICENSE.compress.txt, lib/LICENSE.txt, lib/NOTICE.txt,
+	  lib/commons-compress-cvs-2004-12-22.jar, lib/tar.jar,
+	  src/si/klika/bootchart/Main.java: Replaced the tar package with
+	  commons-compress.
+
+2004-12-22  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* INSTALL: Added note for Gentooers.  Added note about using Apache
+	  software.
+
+	* build.xml: Updated javadoc classpath.
+
+	* src/si/klika/bootchart/servlet/RenderServlet.java: Log file
+	  handling changes.
+
+	* src/si/klika/bootchart/: Main.java, common/Common.java: Renamed
+	  the log file filter.
+
+	* src/si/klika/bootchart/: renderer/SVGRenderer.java,
+	  renderer/PNGRenderer.java, renderer/Renderer.java,
+	  parser/IostatParser.java: Moved getMaxDiskTPut to IostatParser.
+
+	* examples/: boot.io.log.gz, boot.top.log.gz, bootchart.log.tar.gz:
+	  Updated sample log file.
+
+2004-12-19  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* src/si/klika/bootchart/: parser/ForkParser.java,
+	  parser/IostatParser.java, parser/PidNameParser.java,
+	  parser/TopParser.java, Main.java, common/Common.java: Parsing
+	  cleanups.
+
+2004-12-19  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* README, render.sh: Removed the render.sh script.
+
+	* INSTALL, Makefile, README, render.sh: Build changes.
+
+	* src/si/klika/bootchart/: CSSInliner.java, Common.java,
+	  ForkParser.java, IostatParser.java, IostatSample.java, Main.java,
+	  PNGEncoder.java, PNGEncoderB.java, PNGRenderer.java,
+	  PidNameParser.java, Process.java, ProcessTree.java,
+	  Renderer.java, SVGRenderer.java, TopParser.java, TopSample.java,
+	  package.html, common/Common.java, common/IostatSample.java,
+	  common/Process.java, common/ProcessTree.java,
+	  common/TopSample.java, common/package.html,
+	  parser/ForkParser.java, parser/IostatParser.java,
+	  parser/PidNameParser.java, parser/TopParser.java,
+	  parser/package.html, renderer/CSSInliner.java,
+	  renderer/PNGEncoder.java, renderer/PNGEncoderB.java,
+	  renderer/PNGRenderer.java, renderer/Renderer.java,
+	  renderer/SVGRenderer.java, renderer/package.html: Moved classes
+	  to packages.
+
+2004-12-19  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* .classpath: Imported the Java Tar library and Commons CLI.
+
+	* src/si/klika/bootchart/servlet/package.html: Added Javadoc
+	  package descriptions.
+
+	* src/si/klika/bootchart/: Common.java, ForkParser.java,
+	  IostatParser.java, PNGRenderer.java, PidNameParser.java,
+	  ProcessTree.java, TopParser.java: Log file handling changes.
+
+	* build.xml: Added tar and CLI libraries.  Bundled SVG templates in
+	  JAR.	Added javadoc target.
+
+	* render.sh, src/si/klika/bootchart/servlet/RenderServlet.java: Log
+	  file handling changes.  Improved error handling.
+
+	Contributions from Paul Pacheco  <paul.pacheco@wavecode.com>:
+	* src/si/klika/bootchart/SVGRenderer.java: SVG template bundling
+	  changes.
+
+	* src/si/klika/bootchart/Main.java: Use Commons CLI for command
+	  line options.  Log file handling changes.
+
+	* lib/: LICENSE.txt, commons-cli-1.0.jar, tar.jar: Imported the
+	  Java Tar library and Commons CLI.
+
+	* src/: overview.html, si/klika/bootchart/package.html: Added
+	  Javadoc package descriptions.
+
+	Contribution from Stephan Kulow  <coolo@suse.de>:
+	* script/kernel/bootlog.fork-2.6.9.patch: Added optional kernel
+	  patch for do_fork logging.
+
+	* script/: conectiva.sh, debian-filerc.patch, debian.sh, distro,
+	  fc3-rc.sysinit.patch, gentoo-rc.patch, rh9-rc.sysinit.patch,
+	  smgl-init.patch, suse-boot.patch, init/conectiva.sh,
+	  init/debian-filerc.patch, init/debian.sh,
+	  init/fc3-rc.sysinit.patch, init/gentoo-rc.patch,
+	  init/rh9-rc.sysinit.patch, init/smgl-init.patch,
+	  init/suse-boot.patch: Moved init patches to init/.
+
+	* script/bootlog: Create a single log tarball.	Include any fork
+	  log lines from dmesg.
+
+	* COPYING, INSTALL, README, TODO: Updated documentation.
+
+2004-12-17  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	Patch from Vagner A. Farias  <vfarias@conectiva.com.br>:
+	* script/: bootlog, conectiva.sh, distro: Added support for
+	  Conectiva Linux.
+
+	* install.sh: Removed redundant copy.
+
+2004-12-14  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* src/si/klika/bootchart/Common.java: Bumped version.
+
+	* INSTALL, TODO: Updated documentation.
+
+	* script/debian-rc.patch, script/debian.sh, script/distro,
+	  install.sh, uninstall.sh: Updated Debian init patch to start
+	  logging earlier.
+
+2004-12-13  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* svg/style.css, src/si/klika/bootchart/PNGRenderer.java: Added
+	  signature.
+
+	Patch from Robert Helgesson  <rycee@home.se>:
+	* script/bootlog, script/smgl-init.patch, install.sh, uninstall.sh:
+	  Fixes for smgl.
+
+2004-12-13  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* src/si/klika/bootchart/ProcessTree.java: Never filter exit
+	  processes.
+
+	* src/si/klika/bootchart/: PNGRenderer.java: Fixed image type
+	  regression.
+
+2004-12-13  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	Patches from Colin Phipps  <cph@moria.org.uk> (file-rc) and
+	Robert Helgesson  <rycee@home.se> (smgl):
+	* script/: debian-filerc.patch, distro, smgl-init.patch: Added
+	  support for Source Mage and Debian file-rc.
+
+	Patch from Vincent McIntyre  <Vince.McIntyre@atnf.csiro.au>:
+	* render.sh: Fixed elif test.
+
+	* src/si/klika/bootchart/: IostatParser.java, Main.java,
+	  SVGRenderer.java, TopParser.java, servlet/RenderServlet.java:
+	  Minor parser and renderer fixes.
+
+	* src/si/klika/bootchart/PNGRenderer.java: Filter out cpuinfo
+	  label.
+
+2004-12-11  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* INSTALL: Updated gcj instructions.
+
+	* src/si/klika/bootchart/: Common.java, IostatParser.java,
+	  Process.java, TopParser.java: Parser fixes for various locales
+	  and procps versions.
+
+	* src/si/klika/bootchart/servlet/RenderServlet.java: ProcessTree
+	  constructor update.
+
+	* svg/style.css: Use pure white for background.
+
+2004-12-09  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* script/bootlog: Fixed pkill switch to kill oldest processes.
+
+2004-12-09  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* src/si/klika/bootchart/ProcessTree.java: Added bootlog to the
+	  list of filtered processes.
+
+2004-12-09  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* Makefile: Added a parser for the kernel do_fork logging patch.
+
+	* src/si/klika/bootchart/: ForkParser.java, Main.java,
+	  ProcessTree.java: Added a parser for the kernel do_fork logging
+	  patch.
+
+	* src/si/klika/bootchart/IostatParser.java: Fixed parser for
+	  localized iostat output.
+
+	* src/si/klika/bootchart/Common.java,
+	  src/si/klika/bootchart/SVGRenderer.java,
+	  svg/process.svg.template: Made SVG compression an option.
+
+	* src/si/klika/bootchart/CSSInliner.java: Code cleanup.
+
+	Patches from Stephan Kulow  <coolo@suse.de>:
+	* src/si/klika/bootchart/PNGRenderer.java: Minor style changes.
+	
+	* script/bootlog, script/debian-rc.patch, script/distro,
+	  script/fc3-rc.sysinit.patch, script/gentoo-rc.patch,
+	  script/rh9-rc.sysinit.patch, script/suse-boot.patch, INSTALL,
+	  README, install.sh: Move bootchart directory to /lib for better
+	  FHS compliance.
+
+2004-12-06  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* src/si/klika/bootchart/: PNGEncoder.java, PNGEncoderB.java,
+	  PNGRenderer.java: Replaced ImageIO packages with PNGEncoder.
+
+	* src/si/klika/bootchart/Common.java: Added CVS Id keyword.
+	
+	* TODO: Fixed typo.
+
+	* render.sh, script/distro: Minor fixes.
+
+	* src/si/klika/bootchart/SVGRenderer.java, svg/style.css: Minor
+	  fixes.
+
+2004-12-05  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* INSTALL, Makefile, README, TODO, build.xml, render.sh,
+	  src/si/klika/bootchart/Main.java: Documentation and build system
+	  overhaul.
+
+	* script/distro, install.sh, uninstall.sh: Factored out distro
+	  detection.
+
+2004-12-05  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* src/si/klika/bootchart/Common.java: Added xdm and getty to the
+	  list of exit processes.
+
+	* src/si/klika/bootchart/TopParser.java: Fixed log file encoding
+	  issues.
+
+	* svg/bootchart.svg.template, svg/style.css,
+	  src/si/klika/bootchart/SVGRenderer.java: Improved ksvg
+	  compatibility.
+
+2004-12-04  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	Patch from Stephan Kulow  <coolo@suse.de>:
+	* script/bootlog, script/suse-boot.patch, INSTALL, README,
+	  install.sh, uninstall.sh: Added support for SuSE.
+
+	* svg/bootchart.svg.template, svg/style.css,
+	  src/si/klika/bootchart/CSSInliner.java,
+	  src/si/klika/bootchart/Common.java,
+	  src/si/klika/bootchart/IostatParser.java,
+	  src/si/klika/bootchart/Main.java,
+	  src/si/klika/bootchart/PNGRenderer.java,
+	  src/si/klika/bootchart/ProcessTree.java,
+	  src/si/klika/bootchart/Renderer.java,
+	  src/si/klika/bootchart/SVGRenderer.java: Improved rendering for
+	  SuSE.  Implemented CVS inlining for ksvg support.
+
+	* src/si/klika/bootchart/servlet/RenderServlet.java, .classpath,
+	  src/si/klika/bootchart/RenderServlet.java: Moved RenderServlet to
+	  servlet package.
+	
+	* src/si/klika/bootchart/TopParser.java: Fixed CPU time parsing (thanks
+	  to Carl Wilhelm Soderstrom).
+
+	* render.sh: Document renderer usage.
+
+	* examples/: boot.io.log.gz, boot.io.log.sortreadahead.gz,
+	  boot.top.log.gz, boot.top.log.sortreadahead.gz: Renamed log file
+	  examples.
+
+2004-12-03  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* src/si/klika/bootchart/: SVGRenderer.java, Main.java,
+	  PNGRenderer.java, RenderServlet.java, Renderable.java,
+	  Renderer.java: Replaced Renderable interface with an abstract
+	  class.  Improved disk read scale.
+
+	* src/si/klika/bootchart/ProcessTree.java,
+	  svg/bootchart.svg.template, svg/style.css: Minor style
+	  improvements.
+
+2004-12-02  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	Patch from Chris Debenham  <chris@adebenham.com>:
+	* script/bootlog, script/debian-rc.patch, install.sh: Added support
+	  for Debian.
+
+	Patch from Paul Pacheco  <paul.pacheco@wavecode.com>:
+	* script/bootlog: Replace deprecated head -1.
+
+	* src/si/klika/bootchart/: IostatParser.java, PNGRenderer.java,
+	  Process.java, ProcessTree.java, SVGRenderer.java: Various parser
+	  fixes.
+
+2004-12-01  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* INSTALL, README, TODO: Updated documentation.
+
+	Patch from Paul Pacheco  <paul.pacheco@wavecode.com>:
+	* install.sh, script/gentoo-rc.patch: Gentoo changes.
+
+	* script/bootlog: Added support for Mandrake.
+
+	* script/rc.sysinit.7.93.5-1.patch: Removed obsolete patch.
+
+	* src/si/klika/bootchart/: Main.java, PNGRenderer.java,
+	  PidNameParser.java, RenderServlet.java, Renderable.java,
+	  SVGRenderer.java: Implemented SVG rendering.	Added a PID-cmdline
+	  mapping parser.
+
+	* src/si/klika/bootchart/: IostatParser.java, Process.java,
+	  ProcessTree.java, TopParser.java: Fixed time skew issues.
+	  Optimized process tree construction.
+
+	* svg/: bootchart.svg.template, process.svg.template, style.css:
+	  Added SVG templates.
+
+	* Makefile: Added Makefile for gcj.
+
+2004-11-28  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	Patches from Paul Pacheco  <paul.pacheco@wavecode.com> and
+	Jernej Simoncic  <jernej@ena.si>:
+	* INSTALL, script/bootlog, script/fc3-rc.sysinit.patch,
+	  script/gentoo-rc.patch, script/rh9-rc.sysinit.patch, README,
+	  install.sh, uninstall.sh: Changes for Gentoo and RH9.
+
+	* .cvsignore: Added bootchart.jar.
+
+	* src/si/klika/bootchart/: ProcessTree.java, Renderable.java: Added
+	  interface for future SVG support.
+
+	* src/si/klika/bootchart/: IostatParser.java, PNGRenderer.java:
+	  Accumulate statistics for all disks.
+
+	* src/si/klika/bootchart/: Main.java, RenderServlet.java,
+	  TopParser.java: Improved exit process handling.
+
+2004-11-25  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* README: Added note about sysstat installation.
+
+	* build.xml: Added prepare target.
+
+	* src/si/klika/bootchart/PNGRenderer.java: Handle missing headers.
+
+	* src/si/klika/bootchart/IostatParser.java: Fixed time parsing.
+
+2004-11-24  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* src/si/klika/bootchart/TopParser.java: Fixed problem with PR
+	  column (thanks to Paul Pacheco).  Added workaround for invalid
+	  SMP log files.
+
+	* src/si/klika/bootchart/ProcessTree.java: Improved updateStats()
+	  performance.	Handle missing PPID column.
+
+	* src/si/klika/bootchart/PNGRenderer.java: Properly handle missing
+	  iostat samples.
+
+	* src/si/klika/bootchart/Main.java: Fixed logger class.
+
+2004-11-23  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* src/si/klika/bootchart/: IostatParser.java, ProcessTree.java:
+	  Time skew fixes.
+
+	* script/bootlog, install.sh, render.sh, uninstall.sh: Fixes for
+	  SMP and missing /usr.  Added uninstall script.
+
+2004-11-22  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* build.xml: Added jar target.	Excluded RenderServlet.
+
+	* .classpath, .cvsignore, .project: Eclipse project files
+
+2004-11-22  Ziga Mahkovec  <ziga.mahkovec@klika.si>
+
+	* Initial import.

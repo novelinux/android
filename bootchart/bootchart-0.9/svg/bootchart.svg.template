@@ -1,0 +1,99 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<!-- Dimension -->
+<svg {0} xmlns="http://www.w3.org/2000/svg">
+	<defs>
+		<style type="text/css"><![CDATA[
+			/* Style sheet */
+			{1}
+		]]></style>
+	</defs>
+	
+	<rect x="0" y="0" width="100%" height="100%" class="Back"/>
+	
+	<!-- Header text -->
+	<text class="Title" x="10" y="22">{2}</text>
+	<g class="Header" transform="translate(10, 24)">
+		<!-- System information -->
+		<text dy="1.2em">{3}</text>
+		<!-- OS information -->
+		<text dy="2.4em">{4}</text>
+		<!-- CPU information  -->
+		<text dy="3.6em">{5}</text>
+		<!-- Kernel cmdline -->
+		<text dy="4.8em">{6}</text>
+		<!-- Boot time -->
+		<text dy="6.0em">{7}</text>
+	</g>
+	
+	<!-- CPU load chart -->
+	<g transform="translate(0, 130)" style="fill: none;">
+		<g transform="translate(0, -5)">
+			<rect x="2px" y="-17px" width="10px" height="10px" class="CPU"/><text class="LegendText" dx="15px" dy="-7px">CPU (user+sys)</text>
+			<rect x="120px" y="-17px" width="10px" height="10px" class="IO"/><text class="LegendText" dx="135px" dy="-7px">I/O (wait)</text>
+		</g>
+		
+		<rect class="PerfChart" x="0" y="0" width="100%" height="50px"/>
+		<g class="Tick" transform="translate(0.5, 0.5)">
+			<!-- CPU/IO load time ticks -->
+			{8}
+		</g>
+		<!-- IO chart -->
+		<polyline class="IO" points="{9}"/>
+		<!-- CPU load chart -->
+		<polyline class="CPU" points="{10}"/>
+		
+	</g>
+	
+	<!-- Disk utilization chart -->
+	<g transform="translate(0, 210)" style="fill: none;">
+		<g transform="translate(0, -5)">
+			<line x1="1px" y1="-12px" x2="13px" y2="-12px" class="DiskTPut"/><circle class="DiskTPut" cx="7" cy="-12" r="2"/><text class="LegendText" dx="15px" dy="-7px">Disk throughput</text>
+			<rect x="120px" y="-17px" width="10px" height="10px" class="DiskUtil"/><text class="LegendText" dx="135px" dy="-7px">Disk utilization</text>
+			<!--<line x1="120px" y1="-12px" x2="132px" y2="-12px" class="FileOpen"/><circle class="FileOpen" cx="127" cy="-12" r="2"/><text class="LegendText" dx="135px" dy="-7px">Files opened</text>-->
+		</g>
+		
+		<rect class="PerfChart" x="0" y="0" width="100%" height="50px"/>
+		<g class="Tick" transform="translate(0.5, 0.5)">
+			<!-- Disk utilization time ticks -->
+			{11}
+		</g>
+		<!-- Disk utilization chart -->
+		<polyline class="DiskUtil" points="{12}"/>
+		
+		<g class="DiskTPut">
+			<!-- Disk throughput chart -->
+			{13}
+		</g>
+		
+		<g class="FileOpen">
+			<!-- Files opened chart -->
+			{14}
+		</g>
+	</g>
+	
+	<!-- Process dependency chart -->
+	<g transform="translate(0, 300)" style="fill: none;">
+		<g transform="translate(0, -30)">
+		    <!--<rect class="LegendBack" x="0px" y="0px" width="480px" height="16px"/>-->
+			<rect x="2" y="3" width="10px" height="10px" class="Running"/><text class="LegendText" dx="15px" dy="1em">Running (%cpu)</text>
+			<rect x="120" y="3" width="10px" height="10px" class="UnintSleep"/><text class="LegendText" dx="135px" dy="1em">Unint.sleep (I/O)</text>
+			<rect x="240" y="3" width="10px" height="10px" class="Sleeping"/><text class="LegendText" dx="255px" dy="1em">Sleeping</text>
+			<rect x="360" y="3" width="10px" height="10px" class="Zombie"/><text class="LegendText" dx="375px" dy="1em">Zombie</text>
+		</g>
+		
+		<!-- Process axis labels -->
+		{15}
+		<rect class="ProcessTree" x="0" y="0" width="100%" height="100%"/>
+		<g class="Tick" transform="translate(0.5, 0.5)">
+			<!-- Process time ticks and delimiter lines -->
+			{16}
+		</g>
+		
+		<!-- Process chart -->
+		{17}
+	</g>
+	
+	<!--<text x="0" y="100%" dx="5" dy="-5" class="Signature">www.bootchart.org</text>-->
+</svg>

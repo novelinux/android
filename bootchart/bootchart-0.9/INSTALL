@@ -1,0 +1,93 @@
+Installation
+------------
+
+1. Installing the bootchart logger (bootchartd)
+
+First, uninstall any previous bootchart version.
+Run the install.sh script for installing bootchartd.  It will copy the
+necessary files and (if grubby is available) automatically add a GRUB/LILO
+entry to enable bootchart logging.
+
+If grubby is not available the boot loader configuration needs to be changed
+manually.  Add a new boot loader entry and modify the kernel command line to
+include "init=/sbin/bootchartd".  Example for GRUB (/boot/grub/menu.lst):
+
+title Bootchart logging
+        root (hd0,1)
+        kernel /vmlinuz-2.6.10 ro root=/dev/hda1 init=/sbin/bootchartd
+        initrd /initrd-2.6.10.img
+title Fedora Core (2.6.10)
+        root (hd0,1)
+        kernel /vmlinuz-2.6.10 ro root=/dev/hda1
+        initrd /initrd-2.6.10.img
+
+Alternatively, the kernel command line may be changed interactively when the
+boot loader displays the menu.
+
+
+2. Enabling process accounting (optional)
+
+The boot logger will periodically log the output of /proc/[PID]/stat
+files.  While this is in most cases sufficient to recreate the process tree,
+it is possible that a short-lived process will not get picked up by the
+logger.  If that process also forks new processes, the logger will lack
+dependency information for these "orphaned" processes -- meaning that they
+might get incorrectly grouped by the renderer.
+
+To work around this issue, process accounting may be enabled.  When the
+kernel is configured to perform process accounting, it will output basic
+information about each process as it exists.  Since the accounting
+information also includes the process' PID and PPID (parent PID), it enables
+an accurate recreation of the process tree.
+
+To enable process accounting, the kernel needs to be configured to include
+CONFIG_BSD_PROCESS_ACCT_V3 (under General setup / BSD Process Accounting /
+BSD Process Accounting version 3 file format).
+
+The GNU accounting utilities also need to be installed (package psacct or
+acct).  Only the accton tool is used from the utilities to enable and
+disable accounting. The parser will read the binary accounting file
+directly and does not require the accounting tools to be able to read v3
+files.  Also, any accounting services need to be disabled to prevent
+interfering with the boot logger -- it will start and stop accounting by
+itself.
+
+
+3. Compiling the Java sources
+
+Install a Java Development Kit, to be able to compile the Java sources for
+the bootchart renderer.  Note that a JDK is not necessary if the renderer web
+service is used. See README for details on using the renderer web service.
+
+Bootchart is known to work with the following Java development environments:
+
+  - Sun J2SE SDK
+    (http://java.sun.com/j2se/1.4.2/, http://java.sun.com/j2se/1.5.0/)
+
+  - IBM developer kit for Linux
+    (http://www-106.ibm.com/developerworks/java/jdk/linux140/)
+
+  - Free environments, based on GNU Classpath (*):
+      o GCJ 3.4.2, 4.0.0 (http://gcc.gnu.org/java/)
+      o JamVM 1.2.4 (http://jamvm.sourceforge.net/)
+      o SableVM 1.1.9 (http://sablevm.org/)
+      o Kaffe 1.1.x-cvs (http://www.kaffe.org/)
+  
+    (*) Note: These environments are limited to SVG rendering, due to
+        incomplete Graphics2D implementation.
+
+Distribution specific notes on installing Java:
+
+  - RPM based distributions
+    (Fedora, Red Hat, SUSE Linux, Mandrakelinux, etc.):
+    http://jpackage.org
+
+  - Gentoo:
+    http://www.gentoo.org/doc/en/java.xml
+
+  - Ubuntu:
+    http://www.ubuntulinux.org/wiki/Java
+
+
+To build the sources, install the Apache Ant package.  Run 'ant' in the
+bootchart directory to build the JAR package.

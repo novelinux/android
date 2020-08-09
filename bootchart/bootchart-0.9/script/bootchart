@@ -1,0 +1,24 @@
+#!/bin/sh
+#
+# bootchart script
+# JPackage Project <http://www.jpackage.org/>
+
+# Source functions library
+if [ -f /usr/share/java-utils/java-functions ] ; then
+  . /usr/share/java-utils/java-functions
+else
+  echo "Can't find functions library, aborting"
+  exit 1
+fi
+
+# Configuration
+MAIN_CLASS="org.bootchart.Main"
+BASE_JARS="commons-cli.jar bootchart.jar"
+FLAGS="-Djava.awt.headless=true -Dgnu.java.awt.peer.gtk.Graphics=Graphics2D"
+
+# Set parameters
+set_jvm
+set_classpath $BASE_JARS
+
+# Let's start
+run "$@"

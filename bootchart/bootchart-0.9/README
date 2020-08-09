@@ -1,0 +1,63 @@
+Introduction
+------------
+
+Bootchart is a tool for performance analysis and visualization of the
+GNU/Linux boot process.  Resource utilization and process information are
+collected during the boot process and can later be displayed in a PNG, SVG or
+EPS-encoded chart.
+
+The boot process is modified to start the boot logger (/sbin/bootchartd)
+instead of /sbin/init.  The boot logger will run in background and collect
+information from the proc file system (/proc/[PID]/stat, /proc/stat and
+/proc/diskstats).  The statistics are logged to a virtual memory file system
+(tmpfs).  Once the boot process completes (denoted by the existence of
+specific processes), the log files are packaged to /var/log/bootchart.tgz.
+
+The log package can later be processed using a Java application which builds
+the process tree and renders a performance chart.  The chart may then be
+analyzed to examine process dependency and overall resource utilization.
+A renderer web form is also available on the project web site.
+
+
+Running
+-------
+
+1. Install bootchartd and the bootchart renderer. See INSTALL for details.
+
+2. Modify your boot loader (GRUB/LILO) if necessary.  Alternatively, change
+   the kernel command line interactively upon reboot.
+   Reboot.
+
+3. Verify that /var/log/bootchart.tgz was created and contains the log files.
+
+4. Render the chart by running:
+
+   $ java -jar bootchart.jar
+
+   Alternatively (if no Java Development Kit is installed to build the JAR
+   package), the web renderer may be used.  The web form is available at:
+   
+   http://www.bootchart.org
+
+   To use the web renderer from a script, run:
+   curl --form format=svg --form log=@/var/log/bootchart.tgz \
+     http://bootchart.klika.si:8080/bootchart/render > bootchart.svgz
+
+   (optionally replacing the svg/bootchart.svgz pair with png/bootchart.png or
+    eps/bootchart.eps.gz)
+
+5. View the generated image and analyze the chart.
+   SVG images may be viewed using any of the following programs:
+   - rsvg-view (librsvg; GNOME)
+   - svgdisplay (ksvg; KDE)
+   - Gimp (using the gimp-svg plugin)
+   - Inkscape
+   - Squiggle (Batik; http://xml.apache.org/batik/)
+
+   To get help for additional options, run:
+   
+   $ java -jar bootchart -h
+
+
+http://www.bootchart.org
+Ziga Mahkovec  <ziga.mahkovec@klika.si>

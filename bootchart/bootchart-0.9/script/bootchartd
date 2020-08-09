@@ -1,0 +1,253 @@
+#!/bin/sh
+#
+# Bootchart logger script
+# Ziga Mahkovec  <ziga.mahkovec@klika.si>
+#
+# This script is used for data collection for the bootchart
+# boot performance visualization tool (http://www.bootchart.org).
+#
+# To profile the boot process, bootchartd should be called instead of
+# /sbin/init.  Modify the kernel command line to include:
+# init=/sbin/bootchartd
+#
+# bootchartd will then start itself in background and exec /sbin/init
+# (or an alternative init process if specified using bootchart_init=)
+#
+# To profile a running system, run:
+# $ /sbin/bootchartd start; sleep 30; /sbin/bootchartd stop
+#
+
+PATH="/sbin:/bin:/usr/sbin:/usr/bin:$PATH"
+VERSION="0.8"
+
+# Read configuration.
+CONF="/etc/bootchartd.conf"
+if [ -f $PWD/bootchartd.conf ]; then
+	. $PWD/bootchartd.conf
+elif [ -f $CONF ]; then
+        . $CONF
+else
+        echo "$CONF missing"
+        exit 1
+fi
+
+
+# Start the boot logger.
+start()
+{
+	# Make sure only a single instance is running
+	[ -f "$BOOTLOG_LOCK" ] && return
+	
+	# Mount the temporary file system for log file storage.  If possible,
+	# a temporary directory is created.  In most cases though (i.e. during
+	# boot), a tmpfs is mounted in /mnt.  The mount point is immediately
+	# released using a lazy umount, so the script must never leave that
+	# directory.
+	LOG_DIR="$( mktemp -d /tmp/bootchart.XXXXXX 2>/dev/null )"
+	if [ -z "$LOG_DIR" ]; then
+		LOG_DIR="/mnt"
+		LAZY_UMOUNT="yes"
+		mount -n -t tmpfs -o size=$TMPFS_SIZE none "$LOG_DIR" >/dev/null 2>&1
+	fi
+	cd "$LOG_DIR"
+	> "$BOOTLOG_LOCK"
+	[ -n "$LAZY_UMOUNT" ] && umount -nfl "$LOG_DIR"
+
+	# Enable process accounting if configured
+	if [ "$PROCESS_ACCOUNTING" = "yes" ]; then
+		> kernel_pacct
+		accton kernel_pacct
+	fi
+	
+	# Wait for /proc to be mounted
+	while [ ! -f /proc/stat ]; do sleep $SAMPLE_PERIOD; done
+	sleep $SAMPLE_PERIOD
+
+	#
+	# Run loggers in background
+	#
+	log_output "cat /proc/stat" proc_stat.log &
+
+	# /proc/diskstats is available in 2.6 kernels
+	[ -f /proc/diskstats ] && log_output "cat /proc/diskstats" proc_diskstats.log &
+
+	log_output "cat /proc/*/stat" proc_ps.log &
+	#log_output "ps -eww -o pid,ppid,s,pcpu,comm,cmd" ps.log &
+
+	if [ -n "$IN_INIT" ]; then
+		# If we were called during init, wait for the boot process to end
+		wait_boot &
+	elif [ "$#" -gt 0 ]; then
+		# If a command was passed, run it
+		# (used for profiling specific applications)
+		echo "profile.process = $( basename $1 )" >> header
+		$@
+		stop
+	fi
+}
+
+
+# Run the command ($1) every $SAMPLE_PERIOD seconds and append output to
+# file ($2).  Mostly pure bash, so we avoid creating an excessive number of
+# processes (thus polluting the process tree).
+log_output()
+{
+	# Set the stop() trap.
+	trap stop USR1
+
+	local cmd="$1"
+	local logfile="$2"
+	while [ -f "$BOOTLOG_LOCK" ]; do
+		# Write the time (in jiffies).
+		read uptime < /proc/uptime
+		uptime=${uptime%% [0-9]*}
+		uptime=${uptime/./}
+		echo $uptime
+
+		# Log the command output
+		eval $cmd 2>/dev/null
+		echo
+		sleep $SAMPLE_PERIOD
+	done  >> "$logfile" || stop
+}
+
+# Wait for the boot process to end.
+wait_boot()
+{
+	local runlevel=$( sed -n 's/.*:\(.*\):initdefault:.*/\1/gp' /etc/inittab )
+
+	# The processes we have to wait for
+	local exit_proc="gdmgreeter gdm-binary kdm_greet kdm"
+	# early_login in FC4 starts gdm early, so fall back to mingetty
+	local early_login="no"
+	grep -q early_login /proc/cmdline && early_login="yes"
+	if [ "$runlevel" -eq "2" -o "$runlevel" -eq "3" -o "$early_login" = "yes" ]; then
+		exit_proc="mingetty agetty rungetty getty"
+	fi
+	while [ -f "$BOOTLOG_LOCK" ]; do
+		if [ -n "$( pidof $exit_proc )" ]; then
+			# Give the exit process some time to start
+			sleep 5
+			# Flush the log files
+			stop
+			return
+		fi
+		sleep 2
+	done;
+}
+
+
+# Stop the boot logger.  The lock file is removed to force the loggers in
+# background to exit.  Some final log files are created and then all log files
+# from the tmpfs are packaged and stored in $BOOTLOG_DEST.
+stop()
+{
+	if [ ! -f "$BOOTLOG_LOCK" ]; then
+		echo "${0##*/} not running"
+		return
+	fi
+	# Prevent concurrent stop() calls
+	rm -f "$BOOTLOG_LOCK" || return
+	sleep $SAMPLE_PERIOD
+	sleep $SAMPLE_PERIOD
+
+	# Stop process accounting if configured
+	local pacct=
+	if [ "$PROCESS_ACCOUNTING" = "yes" ]; then
+		accton
+		pacct=kernel_pacct
+	fi
+
+	# Write system information
+	log_header
+
+	# Package log files
+	tar -zcf "$BOOTLOG_DEST" header $pacct *.log
+	if [ -z "$LAZY_UMOUNT" ]; then
+		rm "$LOG_DIR"/*
+		rmdir "$LOG_DIR"
+	fi
+
+	# Render the chart if configured (and the renderer is installed)
+	[ "$AUTO_RENDER" = "yes" -a -x /usr/bin/bootchart ] && \
+		/usr/bin/bootchart -o "$AUTO_RENDER_DIR" -f $AUTO_RENDER_FORMAT "$BOOTLOG_DEST"
+}
+
+
+# Log some basic information about the system.
+log_header()
+{
+	(
+		echo "version = $VERSION"
+		echo "title = Boot chart for $( hostname | sed q ) ($( date ))"
+		echo "system.uname = $( uname -srvm | sed q )"
+		if [ -f /etc/gentoo-release ]; then
+			echo "system.release = $( sed q /etc/gentoo-release )"
+		elif [ -f /etc/SuSE-release ]; then
+			echo "system.release = $( sed q /etc/SuSE-release )"
+		elif [ -f /etc/debian_version ]; then
+			echo "system.release = Debian GNU/$( uname -s ) $( cat /etc/debian_version )"
+		elif [ -f /etc/frugalware-release ]; then
+			echo "system.release = $( sed q /etc/frugalware-release )"
+		else
+			echo "system.release = $( sed 's/\\.//g;q' /etc/issue )"
+		fi
+
+		# Get CPU count
+		local cpucount=$(grep -c '^processor' /proc/cpuinfo)
+		if [ $cpucount -gt 1 -a -n "$(grep 'sibling.*2' /proc/cpuinfo)" ]; then
+			# Hyper-Threading enabled
+			cpucount=$(( $cpucount / 2 ))
+		fi
+		if grep -q '^model name' /proc/cpuinfo; then
+			echo "system.cpu = $( grep '^model name' /proc/cpuinfo | sed q )"\
+			     "($cpucount)"
+		else
+			echo "system.cpu = $( grep '^cpu' /proc/cpuinfo | sed q )"\
+			     "($cpucount)"
+		fi
+
+		echo "system.kernel.options = $( sed q /proc/cmdline )"
+	) >> header
+}
+
+if [ $$ -eq 1 ]; then
+	# Started by the kernel.  Start the logger in background and exec
+	# init(1).
+	IN_INIT="yes"
+	echo "Starting bootchart logging"
+	start &
+	
+	# Optionally, an alternative init(1) process may be specified using
+	# the kernel command line (e.g. "bootchart_init=/sbin/initng")
+	init="/sbin/init"
+	for i in $@; do
+		if [ "${i%%=*}" = "bootchart_init" ]; then
+			init="${i#*=}"
+			break
+		fi
+	done
+	exec $init $*
+fi
+
+case "$1" in
+	"init")
+		# Started by the init script
+		IN_INIT="yes"
+		echo "Starting bootchart logging"
+		start &
+		;;
+	"start")
+		# Started by the user
+		shift
+		start $@
+		;;
+	"stop")
+		# Signal all background processes to stop logging
+		killall -USR1 bootchartd
+		;;
+	*)
+		echo $"Usage: $0 {init|start|stop}"
+		;;
+esac
+
